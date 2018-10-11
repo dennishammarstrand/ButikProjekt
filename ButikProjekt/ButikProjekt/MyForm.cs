@@ -13,6 +13,7 @@ namespace ButikProjekt
         public MyForm()
         {
             Label newLabel = new Label() { };
+            Controls.Add(newLabel);
         }
     }
 }
