@@ -18,7 +18,7 @@ namespace ButikProjekt
 
         public static List<Products> listProd = new List<Products>();
 
-        static List<Products> GetProducts()
+        public static List<Products> GetProducts()
         {
             string[] content;
 
