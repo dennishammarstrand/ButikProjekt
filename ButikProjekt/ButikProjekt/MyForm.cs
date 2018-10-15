@@ -101,22 +101,28 @@ namespace ButikProjekt
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
-            DataGridViewRow removedItem = ShoppingCartGridView.Rows[ShoppingCartSelectedRow];
-            string name = removedItem.Cells[0].Value.ToString();
-            foreach (KeyValuePair<Products, int> pair in cartItems)
+            if (ShoppingCartSelectedRow >= 0)
             {
-                if (cartItems.Count > 0)
+                DataGridViewRow removedItem = ShoppingCartGridView.Rows[ShoppingCartSelectedRow];
+                string name = removedItem.Cells[0].Value.ToString();
+                foreach (KeyValuePair<Products, int> pair in cartItems)
                 {
-                    if (name == pair.Key.Name && pair.Value < 2)
+                    if (cartItems.Count > 0)
                     {
-                        cartItems.Remove(pair.Key);
-                        ShoppingCartGridView.Rows.Clear();
-                        PrintToCartDataGrid();
-                        break;
-                    }
-                    else if (name == pair.Key.Name)
-                    {
-                        cartItems[pair.Key] = - 1;
+                        if (name == pair.Key.Name && pair.Value < 2)
+                        {
+                            cartItems.Remove(pair.Key);
+                            ShoppingCartGridView.Rows.Clear();
+                            PrintToCartDataGrid();
+                            break;
+                        }
+                        else if (name == pair.Key.Name)
+                        {
+                            cartItems[pair.Key]--;
+                            ShoppingCartGridView.Rows.Clear();
+                            PrintToCartDataGrid();
+                            break;
+                        }
                     }
                 }
             }
