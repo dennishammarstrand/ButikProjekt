@@ -20,6 +20,8 @@ namespace ButikProjekt
             Font = new Font("San Serif", 9f),
             ReadOnly = true,
             ColumnCount = 3,
+            RowCount = 15,
+            CellBorderStyle = DataGridViewCellBorderStyle.None,
             AutoSize = true,
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
             RowHeadersVisible = false,
@@ -35,6 +37,8 @@ namespace ButikProjekt
             Font = new Font("San Serif", 9f),
             ReadOnly = true,
             ColumnCount = 3,
+            RowCount = 15,
+            CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
             AutoSize = true,
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
             RowHeadersVisible = false,
@@ -63,6 +67,8 @@ namespace ButikProjekt
             MainLayout.Controls.Add(Add, 1, 4);
             MainLayout.Controls.Add(Remove, 1, 5);
             MainLayout.Controls.Add(Buy, 1, 6);
+
+
 
         }
     }
