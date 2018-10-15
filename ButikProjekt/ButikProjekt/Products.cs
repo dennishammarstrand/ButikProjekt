@@ -3,19 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace ButikProjekt
 {
     public class Products
     {
-        public static string Name;
-        public static string Description;
-        public static int Price;
-        public static string Image;
+        public string Name;
+        public string Description;
+        public int Price;
+        public string Image;
 
-        public void GetProducts()
+        public static List<Products> listProd = new List<Products>();
+
+        static void GetProducts()
         {
+            string[] content;
+
             
+            content = File.ReadAllLines("products.csv");
+
+
+            foreach (string s in content)
+            {
+                string[] split = s.Split(';');
+
+                Products newProd = new Products()
+                {
+                    Name = split[0],
+                    Description = split[1],
+                    Price = int.Parse(split[2]),
+                };
+
+                listProd.Add(newProd);
+            }
+
         }
     }
 

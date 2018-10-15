@@ -57,6 +57,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="products.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="kamera_bilder\1dxmark2.jpg" />
+    <Content Include="kamera_bilder\5dsr.jpg" />
+    <Content Include="kamera_bilder\a99.jpg" />
+    <Content Include="kamera_bilder\d5.jpg" />
+    <Content Include="kamera_bilder\d810.jpg" />
+    <Content Include="kamera_bilder\m10.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
