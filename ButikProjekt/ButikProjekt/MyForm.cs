@@ -10,19 +10,37 @@ namespace ButikProjekt
 {
     class MyForm : Form
     {
-        private TableLayoutPanel layout;
+        private TableLayoutPanel Layout = new TableLayoutPanel()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 3
+        };
+        private DataGridView ShopGridView = new DataGridView
+        {
+            Font = new Font("San Serif", 9f),
+            ReadOnly = true,
+            ColumnCount = 2,
+            AutoSize = true,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+            RowHeadersVisible = false,
+            BackgroundColor = SystemColors.Control,
+            BorderStyle = BorderStyle.None,
+            AllowUserToAddRows = false,
+            AllowUserToDeleteRows = false,
+            AllowUserToResizeColumns = false,
+            AllowUserToResizeRows = false
+        };
 
         public MyForm()
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
 
-            layout = new TableLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 3
-            };
-            Controls.Add(layout);
+            Layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            Layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            Layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            Controls.Add(Layout);
+            Layout.Controls.Add(ShopGridView);
 
 
 
