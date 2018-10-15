@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace ButikProjekt
 {
-    class Products
+    public class Products
     {
         public static string Name;
         public static string Description;
+        public static int Price;
         public static string Image;
 
         public void GetProducts()
         {
-            string test = "aknmgklanskg";
-
+            
         }
     }
 
