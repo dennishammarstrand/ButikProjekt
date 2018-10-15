@@ -10,19 +10,19 @@ namespace ButikProjekt
 {
     class MyForm : Form
     {
-        private TableLayoutPanel layout;
+        private TableLayoutPanel Layout = new TableLayoutPanel()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 3
+        };
 
         public MyForm()
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
 
-            layout = new TableLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 3
-            };
-            Controls.Add(layout);
+            
+            Controls.Add(Layout);
 
 
 
