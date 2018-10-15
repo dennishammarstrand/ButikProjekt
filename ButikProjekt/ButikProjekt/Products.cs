@@ -14,7 +14,7 @@ namespace ButikProjekt
 
         public void GetProducts()
         {
-
+            string test = "aknmgklanskg";
 
         }
     }
