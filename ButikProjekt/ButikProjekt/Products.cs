@@ -18,13 +18,11 @@ namespace ButikProjekt
 
         public static List<Products> listProd = new List<Products>();
 
-        static void GetProducts()
+        static List<Products> GetProducts()
         {
             string[] content;
 
-            
             content = File.ReadAllLines("products.csv");
-
 
             foreach (string s in content)
             {
@@ -39,7 +37,7 @@ namespace ButikProjekt
 
                 listProd.Add(newProd);
             }
-
+            return listProd;
         }
     }
 
