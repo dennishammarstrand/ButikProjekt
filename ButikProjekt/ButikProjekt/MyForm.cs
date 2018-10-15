@@ -77,13 +77,11 @@ namespace ButikProjekt
             ShopGridView.Columns[0].Name = "Product";
             ShopGridView.Columns[1].Name = "Price";
             ShopGridView.Columns[0].Width = 150;
-            ShopGridView.ClearSelection();
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
             ShoppingCartGridView.Columns[2].Name = "Quantity";
             ShoppingCartGridView.Columns[0].Width = 150;
-            ShoppingCartGridView.ClearSelection();
 
 
             foreach (Products item in listProd)
@@ -101,7 +99,7 @@ namespace ButikProjekt
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
-            if (ShoppingCartSelectedRow >= 0)
+            if (ShoppingCartSelectedRow >= 0 && cartItems.Count > 0)
             {
                 DataGridViewRow removedItem = ShoppingCartGridView.Rows[ShoppingCartSelectedRow];
                 string name = removedItem.Cells[0].Value.ToString();
