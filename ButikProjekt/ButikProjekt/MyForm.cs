@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
 
 namespace ButikProjekt
 {
@@ -15,22 +16,7 @@ namespace ButikProjekt
             Dock = DockStyle.Fill,
             ColumnCount = 3
         };
-        private DataGridView ShopGridView = new DataGridView
-        {
-            Font = new Font("San Serif", 9f),
-            ReadOnly = true,
-            ColumnCount = 2,
-            CellBorderStyle = DataGridViewCellBorderStyle.None,
-            AutoSize = true,
-            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-            RowHeadersVisible = false,
-            BackgroundColor = SystemColors.Control,
-            BorderStyle = BorderStyle.None,
-            AllowUserToAddRows = false,
-            AllowUserToDeleteRows = false,
-            AllowUserToResizeColumns = false,
-            AllowUserToResizeRows = false
-        };
+        
         private DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
@@ -64,15 +50,10 @@ namespace ButikProjekt
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             Controls.Add(MainLayout);
-            MainLayout.Controls.Add(ShopGridView);
             MainLayout.Controls.Add(ShoppingCartGridView, 2, 0);
             MainLayout.Controls.Add(Add, 1, 4);
             MainLayout.Controls.Add(Remove, 1, 5);
             MainLayout.Controls.Add(Buy, 1, 6);
-
-            ShopGridView.Columns[0].Name = "Product";
-            ShopGridView.Columns[1].Name = "Price";
-            ShopGridView.Columns[0].Width = 150;
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
@@ -80,15 +61,6 @@ namespace ButikProjekt
             ShoppingCartGridView.Columns[0].Width = 150;
 
 
-            foreach (Products item in listProd)
-            {
-                object[] prodNameAndPrice = new object[2];
-                prodNameAndPrice[0] = item.Name;
-                prodNameAndPrice[1] = item.Price;
-                ShopGridView.Rows.Add(prodNameAndPrice);
-            }
-
-            ShopGridView.CellClick += DataGridCellClick;
             ShoppingCartGridView.CellClick += DataGridCellClick;
             Add.Click += AddToCartClick;
             Remove.Click += RemoveFromCartClick;
@@ -152,6 +124,50 @@ namespace ButikProjekt
                 selectedValues[2] = pair.Value;
                 ShoppingCartGridView.Rows.Add(selectedValues);
             }
+        }
+
+        private FlowLayoutPanel CreatingFlowLayout()
+        {
+            FlowLayoutPanel flow = new FlowLayoutPanel() { Dock = DockStyle.Fill };
+
+            List<Products> prodInfo = Products.GetProducts();
+            PictureBox prodImage;
+            Label prodName;
+            Label prodPrice;
+            Button infoButton;
+            Button buyButton;
+            Label description;
+
+            foreach (Products item in prodInfo)
+            {
+                TableLayoutPanel newItem = new TableLayoutPanel()
+                {
+                    ColumnCount = 2,
+                    Size = new Size(210, 350),
+
+                    BackColor = Color.White
+
+                };
+                flow.Controls.Add(newItem);
+                prodImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
+                newItem.Controls.Add(prodImage);
+                newItem.SetColumnSpan(prodImage, 2);
+                prodName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
+                newItem.Controls.Add(prodName);
+                prodPrice = new Label { Text = item.Price.ToString() + " kr", Font = new Font("San serif", 10F), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
+                newItem.Controls.Add(prodPrice);
+                description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65) };
+                newItem.Controls.Add(description);
+                newItem.SetColumnSpan(description, 2);
+                //infoButton = new Button { Text = "Info", AutoSize = true };
+                //newItem.Controls.Add(infoButton);
+                buyButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F) };
+                newItem.SetColumnSpan(buyButton, 2);
+
+                newItem.Controls.Add(buyButton);
+
+            }
+            return flow;
         }
     }
 }

@@ -33,6 +33,7 @@ namespace ButikProjekt
                     Name = split[0],
                     Description = split[1],
                     Price = int.Parse(split[2]),
+                    Image = split[3]
                 };
 
                 listProd.Add(newProd);
