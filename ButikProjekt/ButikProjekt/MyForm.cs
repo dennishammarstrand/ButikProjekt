@@ -51,10 +51,8 @@ namespace ButikProjekt
         private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove", AutoSize = true, Dock = DockStyle.Top };
         private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
-        private int ShoppingCartSelectedRow;
         private List<Products> listProd = Products.GetProducts();
         private Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
-        private Label TabZero = new Label();
 
 
         public MyForm()
@@ -71,8 +69,6 @@ namespace ButikProjekt
             MainLayout.Controls.Add(Add, 1, 4);
             MainLayout.Controls.Add(Remove, 1, 5);
             MainLayout.Controls.Add(Buy, 1, 6);
-            MainLayout.Controls.Add(TabZero, 0, 16);
-            ActiveControl = TabZero;
 
             ShopGridView.Columns[0].Name = "Product";
             ShopGridView.Columns[1].Name = "Price";
@@ -93,43 +89,29 @@ namespace ButikProjekt
             }
 
             ShopGridView.CellClick += DataGridCellClick;
-            ShoppingCartGridView.CellClick += ShoppingCartDataGridCellClick;
+            ShoppingCartGridView.CellClick += DataGridCellClick;
             Add.Click += AddToCartClick;
             Remove.Click += RemoveFromCartClick;
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
-            if (ShoppingCartSelectedRow >= 0 && cartItems.Count > 0)
-            {
-                DataGridViewRow removedItem = ShoppingCartGridView.Rows[ShoppingCartSelectedRow];
+            if (SelectedRow >= 0 && cartItems.Count > 0 && SelectedRow < cartItems.Count)
+            {   
+                DataGridViewRow removedItem = ShoppingCartGridView.Rows[SelectedRow];
                 string name = removedItem.Cells[0].Value.ToString();
-                foreach (KeyValuePair<Products, int> pair in cartItems)
+                var remove = cartItems.First(x => x.Key.Name == name);
+                if (remove.Value > 1)
                 {
-                    if (cartItems.Count > 0)
-                    {
-                        if (name == pair.Key.Name && pair.Value < 2)
-                        {
-                            cartItems.Remove(pair.Key);
-                            ShoppingCartGridView.Rows.Clear();
-                            PrintToCartDataGrid();
-                            break;
-                        }
-                        else if (name == pair.Key.Name)
-                        {
-                            cartItems[pair.Key]--;
-                            ShoppingCartGridView.Rows.Clear();
-                            PrintToCartDataGrid();
-                            break;
-                        }
-                    }
+                    cartItems[remove.Key]--;
+                    ShoppingCartGridView.Rows.Clear();
+                    PrintToCartDataGrid();
                 }
-            }
-        }
-        private void ShoppingCartDataGridCellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                ShoppingCartSelectedRow = e.RowIndex;
+                else
+                {
+                    cartItems.Remove(remove.Key);
+                    ShoppingCartGridView.Rows.Clear();
+                    PrintToCartDataGrid();
+                }
             }
         }
         private void DataGridCellClick(object sender, DataGridViewCellEventArgs e)
