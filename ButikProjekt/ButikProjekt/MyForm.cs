@@ -65,9 +65,8 @@ namespace ButikProjekt
                 TableLayoutPanel newItem = new TableLayoutPanel()
                 {
                     ColumnCount = 2,
-                    Size = new Size(210, 350),
+                    Size = new Size(210, 340),
                     BackColor = Color.White
-
                 };
                 FlowLayout.Controls.Add(newItem);
                 PictureBox ProdImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
@@ -75,12 +74,12 @@ namespace ButikProjekt
                 newItem.SetColumnSpan(ProdImage, 2);
                 Label ProdName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
                 newItem.Controls.Add(ProdName);
-                Label prodPrice = new Label { Text = item.Price.ToString() + " kr", Font = new Font("San serif", 10F), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
+                Label prodPrice = new Label { Text = item.Price.ToString("#,##0") + " kr", Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
                 newItem.Controls.Add(prodPrice);
-                Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65) };
+                Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
                 newItem.Controls.Add(description);
                 newItem.SetColumnSpan(description, 2);
-                Button addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), Tag = item };
+                Button addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Tag = item, Margin = new Padding(10,0,10,0) };
                 newItem.SetColumnSpan(addButton, 2);
                 newItem.Controls.Add(addButton);
                 addButton.Click += AddToCartClick;
