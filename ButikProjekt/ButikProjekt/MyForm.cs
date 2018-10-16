@@ -18,11 +18,6 @@ namespace ButikProjekt
         };
         private FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
         private List<Products> ListProd = Products.GetProducts();
-        private PictureBox prodImage;
-        private Label prodName;
-        private Label prodPrice;
-        public Button addButton;
-        private Label description;
         private DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
@@ -50,7 +45,7 @@ namespace ButikProjekt
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
-            ShowIcon = false;
+            Icon = new Icon("MainFormIcon.ico");
 
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
@@ -75,20 +70,19 @@ namespace ButikProjekt
 
                 };
                 FlowLayout.Controls.Add(newItem);
-                prodImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
-                newItem.Controls.Add(prodImage);
-                newItem.SetColumnSpan(prodImage, 2);
-                prodName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
-                newItem.Controls.Add(prodName);
-                prodPrice = new Label { Text = item.Price.ToString() + " kr", Font = new Font("San serif", 10F), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
+                PictureBox ProdImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
+                newItem.Controls.Add(ProdImage);
+                newItem.SetColumnSpan(ProdImage, 2);
+                Label ProdName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
+                newItem.Controls.Add(ProdName);
+                Label prodPrice = new Label { Text = item.Price.ToString() + " kr", Font = new Font("San serif", 10F), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
                 newItem.Controls.Add(prodPrice);
-                description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65) };
+                Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65) };
                 newItem.Controls.Add(description);
                 newItem.SetColumnSpan(description, 2);
-                addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), Tag = item };
+                Button addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), Tag = item };
                 newItem.SetColumnSpan(addButton, 2);
                 newItem.Controls.Add(addButton);
-
                 addButton.Click += AddToCartClick;
             }
 
