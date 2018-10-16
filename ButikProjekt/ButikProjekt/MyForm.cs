@@ -14,8 +14,10 @@ namespace ButikProjekt
         private TableLayoutPanel MainLayout = new TableLayoutPanel()
         {
             Dock = DockStyle.Fill,
-            ColumnCount = 3
+            ColumnCount = 2
         };
+
+        private FlowLayoutPanel FlowLayout = CreatingFlowLayout();
         
         private DataGridView ShoppingCartGridView = new DataGridView
         {
@@ -31,29 +33,33 @@ namespace ButikProjekt
             AllowUserToAddRows = false,
             AllowUserToDeleteRows = false,
             AllowUserToResizeColumns = false,
-            AllowUserToResizeRows = false
+            AllowUserToResizeRows = false,
+            Dock = DockStyle.Fill
         };
-        private Button Add = new Button { Font = new Font("San Serif", 15f), Text = "Add", AutoSize = true, Dock = DockStyle.Top };
-        private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove", AutoSize = true, Dock = DockStyle.Top };
-        private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
+        private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Top };
+        private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Anchor = AnchorStyles.Top, Dock = DockStyle.Top};
         private int SelectedRow;
         private List<Products> listProd = Products.GetProducts();
         private Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
-
+        private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true };
 
         public MyForm()
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
 
-            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+
             Controls.Add(MainLayout);
-            MainLayout.Controls.Add(ShoppingCartGridView, 2, 0);
-            MainLayout.Controls.Add(Add, 1, 4);
-            MainLayout.Controls.Add(Remove, 1, 5);
-            MainLayout.Controls.Add(Buy, 1, 6);
+            MainLayout.Controls.Add(FlowLayout);
+            MainLayout.SetRowSpan(FlowLayout, 2);
+            MainLayout.Controls.Add(ShoppingCartGridView);
+            MainLayout.Controls.Add(ButtonLayout, 1, 1);
+            ButtonLayout.Controls.Add(Remove);
+            ButtonLayout.Controls.Add(Buy);
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
@@ -62,7 +68,7 @@ namespace ButikProjekt
 
 
             ShoppingCartGridView.CellClick += DataGridCellClick;
-            Add.Click += AddToCartClick;
+            //Add.Click += AddToCartClick;
             Remove.Click += RemoveFromCartClick;
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
@@ -93,13 +99,13 @@ namespace ButikProjekt
                 SelectedRow = e.RowIndex;
             }
         }
+
+        /*
         private void AddToCartClick(object sender, EventArgs e)
         {
-            DataGridViewRow addedItem = ShopGridView.Rows[SelectedRow];
-            string name = addedItem.Cells[0].Value.ToString();
             foreach (Products p in listProd)
             {
-                if (p.Name == name)
+                if (p.Name)
                 {
                     if (cartItems.ContainsKey(p))
                     {
@@ -114,6 +120,7 @@ namespace ButikProjekt
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
         }
+        */
         private void PrintToCartDataGrid()
         {
             foreach (KeyValuePair<Products, int> pair in cartItems)
@@ -126,9 +133,9 @@ namespace ButikProjekt
             }
         }
 
-        private FlowLayoutPanel CreatingFlowLayout()
+        public static FlowLayoutPanel CreatingFlowLayout()
         {
-            FlowLayoutPanel flow = new FlowLayoutPanel() { Dock = DockStyle.Fill };
+            FlowLayoutPanel flow = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
 
             List<Products> prodInfo = Products.GetProducts();
             PictureBox prodImage;
