@@ -40,6 +40,20 @@ namespace ButikProjekt
         private int SelectedRow;
         private Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true };
+        private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 13f), Dock = DockStyle.Fill, ForeColor = SystemColors.InactiveCaption };
+        private static int CartSummary;
+        private Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Top, Dock = DockStyle.Top };
+        public string GetSetSummary
+        {
+            get
+            {
+                return CartPriceSummary.Text;
+            }
+            set
+            {
+                CartPriceSummary.Text = String.Format("Total Cost {0:C}", CartSummary);
+            }
+        }
 
         public MyForm()
         {
@@ -51,14 +65,17 @@ namespace ButikProjekt
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
 
             Controls.Add(MainLayout);
             MainLayout.Controls.Add(FlowLayout);
-            MainLayout.SetRowSpan(FlowLayout, 2);
+            MainLayout.SetRowSpan(FlowLayout, 3);
             MainLayout.Controls.Add(ShoppingCartGridView);
-            MainLayout.Controls.Add(ButtonLayout, 1, 1);
+            MainLayout.Controls.Add(CartPriceSummary, 1, 1);
+            MainLayout.Controls.Add(ButtonLayout, 1, 2);
             ButtonLayout.Controls.Add(Remove);
             ButtonLayout.Controls.Add(Buy);
+            ButtonLayout.Controls.Add(DiscountCode);
 
             foreach (Products item in ListProd)
             {
@@ -93,6 +110,29 @@ namespace ButikProjekt
 
             ShoppingCartGridView.CellClick += DataGridCellClick;
             Remove.Click += RemoveFromCartClick;
+            Buy.Click += BuyButtonClickEvent;
+            DiscountCode.Enter += TextBoxEnter;
+            DiscountCode.Leave += TextBoxLeave;
+        }
+        private void BuyButtonClickEvent(object sender, EventArgs e)
+        {
+            MessageBox.Show("Hej");
+        }
+        private void TextBoxLeave(object sender, EventArgs e)
+        {
+            if (DiscountCode.Text == "")
+            {
+                DiscountCode.Text = "Discount Code";
+                DiscountCode.ForeColor = SystemColors.InactiveCaption;
+            }
+        }
+        private void TextBoxEnter(object sender, EventArgs e)
+        {
+            if (DiscountCode.Text == "Discount Code")
+            {
+                DiscountCode.Text = "";
+                DiscountCode.ForeColor = Color.Black;
+            }
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
@@ -106,12 +146,16 @@ namespace ButikProjekt
                     cartItems[remove.Key]--;
                     ShoppingCartGridView.Rows.Clear();
                     PrintToCartDataGrid();
+                    CartSummary -= remove.Key.Price;
+                    GetSetSummary = CartPriceSummary.Text;
                 }
                 else
                 {
                     cartItems.Remove(remove.Key);
                     ShoppingCartGridView.Rows.Clear();
                     PrintToCartDataGrid();
+                    CartSummary -= remove.Key.Price;
+                    GetSetSummary = CartPriceSummary.Text;
                 }
             }
         }
@@ -125,7 +169,7 @@ namespace ButikProjekt
         private void AddToCartClick(object sender, EventArgs e)
         {
             var add = (Products)((Button)sender).Tag;
-            
+            CartSummary += add.Price;
             if (cartItems.ContainsKey(add))
             {
                 cartItems[add] = cartItems[add] + 1;
@@ -136,6 +180,7 @@ namespace ButikProjekt
             }
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
+            GetSetSummary = CartPriceSummary.Text;
         }
         private void PrintToCartDataGrid()
         {
