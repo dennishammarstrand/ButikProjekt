@@ -69,7 +69,6 @@ namespace ButikProjekt
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
-
             ButtonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
             Controls.Add(MainLayout);
@@ -107,46 +106,52 @@ namespace ButikProjekt
                 newItem.Controls.Add(addButton);
                 addButton.Click += AddToCartClick;
             }
-
-
+            
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
             ShoppingCartGridView.Columns[2].Name = "Quantity";
             ShoppingCartGridView.Columns[0].Width = 150;
-
-
+            
             ShoppingCartGridView.CellClick += DataGridCellClick;
             Remove.Click += RemoveFromCartClick;
             Buy.Click += BuyButtonClickEvent;
             DiscountCode.Enter += TextBoxEnter;
             DiscountCode.Leave += TextBoxLeave;
             DiscountCode.KeyDown += DiscountCode_KeyDown;
+            ClearCart.Click += ClearCartClick;
         }
-
+        private void ClearCartClick(object sender, EventArgs e)
+        {
+            ShoppingCartGridView.Rows.Clear();
+            cartItems.Clear();
+            CartSummary = 0;
+            GetSetSummary = CartPriceSummary.Text;
+            PrintToCartDataGrid();
+        }
         private void DiscountCode_KeyDown(object sender, KeyEventArgs e)
         {
+            int count = ShoppingCartGridView.Rows.Count;
             object[] discountRow = new object[2];
             if (e.KeyCode == Keys.Enter)
             {
                 if (DiscountList.Contains(DiscountCode.Text))
                 {
-                    discountRow[0] = DiscountCode.Text;
-                    discountRow[1] = 1000;
+                    if (ShoppingCartGridView.Rows[count - 1].Cells[0].Value.ToString() != DiscountCode.Text)
+                    {
+                        discountRow[0] = DiscountCode.Text;
+                        discountRow[1] = 1000;
 
-                    CartSummary -= (int)discountRow[1];
+                        CartSummary -= (int)discountRow[1];
+                        GetSetSummary = CartPriceSummary.Text;
 
-                    GetSetSummary = CartPriceSummary.Text;
+                        ShoppingCartGridView.Rows.Add(discountRow);
 
-                    ShoppingCartGridView.Rows.Add(discountRow);
-
-                    int count = ShoppingCartGridView.Rows.Count;
-
-                    ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                        count = ShoppingCartGridView.Rows.Count;
+                        ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                    }
                 }
-
             }
         }
-
         private void BuyButtonClickEvent(object sender, EventArgs e)
         {
             MessageBox.Show("Hej");
