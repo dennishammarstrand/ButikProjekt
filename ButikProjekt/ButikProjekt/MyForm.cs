@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 
 namespace ButikProjekt
 {
@@ -35,14 +36,15 @@ namespace ButikProjekt
             AllowUserToResizeRows = false,
             Dock = DockStyle.Fill
         };
-        private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Anchor = AnchorStyles.Right };
-        private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Anchor = AnchorStyles.Left };
+        private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
+        private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
+        private Button ClearCart = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
         private Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
-        private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true };
-        private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 13f), Dock = DockStyle.Fill, ForeColor = SystemColors.InactiveCaption };
+        private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
+        private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
         private static int CartSummary;
-        private Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Top, Dock = DockStyle.Top };
+        private Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
         public string GetSetSummary
         {
             get
@@ -51,9 +53,10 @@ namespace ButikProjekt
             }
             set
             {
-                CartPriceSummary.Text = String.Format("Total Cost {0:C}", CartSummary);
+                CartPriceSummary.Text = String.Format("Total Cost {0:C0}", CartSummary);
             }
         }
+
 
         public MyForm()
         {
@@ -67,6 +70,8 @@ namespace ButikProjekt
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
             MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
 
+            ButtonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+
             Controls.Add(MainLayout);
             MainLayout.Controls.Add(FlowLayout);
             MainLayout.SetRowSpan(FlowLayout, 3);
@@ -74,6 +79,7 @@ namespace ButikProjekt
             MainLayout.Controls.Add(CartPriceSummary, 1, 1);
             MainLayout.Controls.Add(ButtonLayout, 1, 2);
             ButtonLayout.Controls.Add(Remove);
+            ButtonLayout.Controls.Add(ClearCart);
             ButtonLayout.Controls.Add(Buy);
             ButtonLayout.Controls.Add(DiscountCode);
 
@@ -91,7 +97,7 @@ namespace ButikProjekt
                 newItem.SetColumnSpan(ProdImage, 2);
                 Label ProdName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
                 newItem.Controls.Add(ProdName);
-                Label prodPrice = new Label { Text = item.Price.ToString("#,##0") + " kr", Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
+                Label prodPrice = new Label { Text = String.Format("{0:C0}", item.Price), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
                 newItem.Controls.Add(prodPrice);
                 Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
                 newItem.Controls.Add(description);
