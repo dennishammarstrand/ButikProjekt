@@ -15,25 +15,32 @@ namespace ButikProjekt
 
         public static List<Products> GetProducts()
         {
-            string[] content;
-
-            content = File.ReadAllLines("products.csv");
-
-            foreach (string s in content)
+            try
             {
-                string[] split = s.Split(';');
+                string[] content;
 
-                Products newProd = new Products()
+                content = File.ReadAllLines("products.csv");
+
+                foreach (string s in content)
                 {
-                    Name = split[0],
-                    Description = split[1],
-                    Price = int.Parse(split[2]),
-                    Image = split[3]
-                };
+                    string[] split = s.Split(';');
 
-                listProd.Add(newProd);
+                    Products newProd = new Products()
+                    {
+                        Name = split[0],
+                        Description = split[1],
+                        Price = int.Parse(split[2]),
+                        Image = split[3]
+                    };
+
+                    listProd.Add(newProd);
+                }
+                return listProd;
             }
-            return listProd;
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 

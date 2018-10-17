@@ -19,6 +19,7 @@ namespace ButikProjekt
         };
         private FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
         private List<Products> ListProd = Products.GetProducts();
+        private List<string> DiscountList = DiscountCodes.ReadCodes();
         private DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
@@ -56,7 +57,6 @@ namespace ButikProjekt
                 CartPriceSummary.Text = String.Format("Total Cost {0:C0}", CartSummary);
             }
         }
-
 
         public MyForm()
         {
@@ -108,6 +108,7 @@ namespace ButikProjekt
                 addButton.Click += AddToCartClick;
             }
 
+
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
             ShoppingCartGridView.Columns[2].Name = "Quantity";
@@ -119,7 +120,33 @@ namespace ButikProjekt
             Buy.Click += BuyButtonClickEvent;
             DiscountCode.Enter += TextBoxEnter;
             DiscountCode.Leave += TextBoxLeave;
+            DiscountCode.KeyDown += DiscountCode_KeyDown;
         }
+
+        private void DiscountCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            object[] discountRow = new object[2];
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (DiscountList.Contains(DiscountCode.Text))
+                {
+                    discountRow[0] = DiscountCode.Text;
+                    discountRow[1] = 1000;
+
+                    CartSummary -= (int)discountRow[1];
+
+                    GetSetSummary = CartPriceSummary.Text;
+
+                    ShoppingCartGridView.Rows.Add(discountRow);
+
+                    int count = ShoppingCartGridView.Rows.Count;
+
+                    ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                }
+
+            }
+        }
+
         private void BuyButtonClickEvent(object sender, EventArgs e)
         {
             MessageBox.Show("Hej");
