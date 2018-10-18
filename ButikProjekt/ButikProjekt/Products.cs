@@ -11,10 +11,9 @@ namespace ButikProjekt
         public int Price;
         public string Image;
 
-        public static List<Products> listProd = new List<Products>();
-
         public static List<Products> GetProducts()
         {
+            List<Products> listProd = new List<Products>();
             try
             {
                 string[] content;

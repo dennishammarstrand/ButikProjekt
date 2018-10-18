@@ -10,10 +10,11 @@ namespace ButikProjekt
 {
     class DiscountCodes
     {
-        private static List<string> DiscountCodeList = new List<string>();
 
         public static List<string> ReadCodes()
         {
+            List<string> DiscountCodeList = new List<string>();
+
             try
             {
                 string[] content;
