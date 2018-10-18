@@ -16,10 +16,10 @@ namespace ButikProjekt
             Dock = DockStyle.Fill,
             ColumnCount = 2
         };
-        private FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
         private List<Products> ListProd = Products.GetProducts();
+        private FlowLayoutPanel FlowLayout = Products.ProductPanelCreation();
         private List<string> DiscountList = DiscountCodes.ReadCodes();
-        private DataGridView ShoppingCartGridView = new DataGridView
+        private static DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
             ReadOnly = true,
@@ -40,12 +40,12 @@ namespace ButikProjekt
         private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
         private Button ClearCart = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
-        private Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
+        private static Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
         private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
         private static int CartSummary;
-        private Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
-        public string GetSetSummary
+        private static Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
+        public static string GetSetSummary
         {
             get
             {
@@ -81,31 +81,6 @@ namespace ButikProjekt
             ButtonLayout.Controls.Add(Buy);
             ButtonLayout.Controls.Add(DiscountCode);
 
-            foreach (Products item in ListProd)
-            {
-                TableLayoutPanel newItem = new TableLayoutPanel()
-                {
-                    ColumnCount = 2,
-                    Size = new Size(210, 340),
-                    BackColor = Color.White
-                };
-                FlowLayout.Controls.Add(newItem);
-                PictureBox ProdImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
-                newItem.Controls.Add(ProdImage);
-                newItem.SetColumnSpan(ProdImage, 2);
-                Label ProdName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
-                newItem.Controls.Add(ProdName);
-                Label prodPrice = new Label { Text = String.Format("{0:C0}", item.Price), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
-                newItem.Controls.Add(prodPrice);
-                Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
-                newItem.Controls.Add(description);
-                newItem.SetColumnSpan(description, 2);
-                Button addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Tag = item, Margin = new Padding(10,0,10,0) };
-                newItem.SetColumnSpan(addButton, 2);
-                newItem.Controls.Add(addButton);
-                addButton.Click += AddToCartClick;
-            }
-            
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
             ShoppingCartGridView.Columns[2].Name = "Quantity";
@@ -125,7 +100,6 @@ namespace ButikProjekt
             cartItems.Clear();
             CartSummary = 0;
             GetSetSummary = CartPriceSummary.Text;
-            PrintToCartDataGrid();
         }
         private void DiscountCode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -203,7 +177,7 @@ namespace ButikProjekt
                 SelectedRow = e.RowIndex;
             }
         }
-        private void AddToCartClick(object sender, EventArgs e)
+        public static void AddToCartClick(object sender, EventArgs e)
         {
             var add = (Products)((Button)sender).Tag;
             CartSummary += add.Price;
@@ -219,7 +193,7 @@ namespace ButikProjekt
             PrintToCartDataGrid();
             GetSetSummary = CartPriceSummary.Text;
         }
-        private void PrintToCartDataGrid()
+        private static void PrintToCartDataGrid()
         {
             foreach (KeyValuePair<Products, int> pair in cartItems)
             {
