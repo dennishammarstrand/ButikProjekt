@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-
+using System.ComponentModel;
+using System.IO;
 
 namespace ButikProjekt
 {
@@ -40,7 +41,6 @@ namespace ButikProjekt
         private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
         private Button ClearCart = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
-        private static Dictionary<Products, int> cartItems = new Dictionary<Products, int>();
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
         private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
         private static int CartSummary;
@@ -62,6 +62,14 @@ namespace ButikProjekt
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
             Icon = new Icon("MainFormIcon.ico");
+            Cart.GetSavedCartItems();
+            ShoppingCartGridView.Rows.Clear();
+            PrintToCartDataGrid();
+            foreach (var item in Cart.CartItems)
+            {
+                CartSummary += item.Product.Price;
+            }
+            GetSetSummary = CartPriceSummary.Text;
 
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
@@ -93,11 +101,22 @@ namespace ButikProjekt
             DiscountCode.Leave += TextBoxLeave;
             DiscountCode.KeyDown += DiscountCode_KeyDown;
             ClearCart.Click += ClearCartClick;
+            FormClosing += SaveCartWhenExit;
+        }
+        private void SaveCartWhenExit(object sender, FormClosingEventArgs e)
+        {
+            using (TextWriter tw = new StreamWriter(@"C:\Windows\Temp\SavedCart.csv"))
+            {
+                foreach (var item in Cart.CartItems)
+                {
+                    tw.WriteLine(string.Format("{0};{1};{2};{3};{4}", item.Product.Name, item.Product.Description, item.Product.Price, item.Product.Image, item.Amount.ToString()));
+                }
+            }
         }
         private void ClearCartClick(object sender, EventArgs e)
         {
             ShoppingCartGridView.Rows.Clear();
-            cartItems.Clear();
+            Cart.CartItems.Clear();
             CartSummary = 0;
             GetSetSummary = CartPriceSummary.Text;
         }
@@ -147,25 +166,26 @@ namespace ButikProjekt
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
-            if (SelectedRow >= 0 && cartItems.Count > 0 && SelectedRow < cartItems.Count)
+            if (SelectedRow >= 0 && Cart.CartItems.Count > 0 && SelectedRow < Cart.CartItems.Count)
             {   
                 DataGridViewRow removedItem = ShoppingCartGridView.Rows[SelectedRow];
                 string name = removedItem.Cells[0].Value.ToString();
-                var remove = cartItems.First(x => x.Key.Name == name);
-                if (remove.Value > 1)
+                var remove = Cart.CartItems.First(x => x.Product.Name == name);
+                var index = Cart.CartItems.IndexOf(remove);
+                if (remove.Amount > 1)
                 {
-                    cartItems[remove.Key]--;
+                    Cart.CartItems[index].Amount--;
                     ShoppingCartGridView.Rows.Clear();
                     PrintToCartDataGrid();
-                    CartSummary -= remove.Key.Price;
+                    CartSummary -= Cart.CartItems[index].Product.Price;
                     GetSetSummary = CartPriceSummary.Text;
                 }
                 else
                 {
-                    cartItems.Remove(remove.Key);
+                    CartSummary -= Cart.CartItems[index].Product.Price;
+                    Cart.CartItems.Remove(remove);
                     ShoppingCartGridView.Rows.Clear();
                     PrintToCartDataGrid();
-                    CartSummary -= remove.Key.Price;
                     GetSetSummary = CartPriceSummary.Text;
                 }
             }
@@ -180,14 +200,22 @@ namespace ButikProjekt
         public static void AddToCartClick(object sender, EventArgs e)
         {
             var add = (Products)((Button)sender).Tag;
-            CartSummary += add.Price;
-            if (cartItems.ContainsKey(add))
+            Cart cartItem = new Cart
             {
-                cartItems[add] = cartItems[add] + 1;
+                Product = add,
+                Amount = 1
+            };
+            CartSummary += add.Price;
+            var obj = Cart.CartItems.FirstOrDefault(x => x.Product.Name == add.Name);
+            if (obj != null)
+            {
+                obj.Amount++;
+                var index = Cart.CartItems.IndexOf(obj);
+                Cart.CartItems[index] = obj;
             }
             else
             {
-                cartItems.Add(add, 1);
+                Cart.CartItems.Add(cartItem);
             }
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
@@ -195,13 +223,13 @@ namespace ButikProjekt
         }
         private static void PrintToCartDataGrid()
         {
-            foreach (KeyValuePair<Products, int> pair in cartItems)
+            foreach (var item in Cart.CartItems)
             {
-                object[] selectedValues = new object[3];
-                selectedValues[0] = pair.Key.Name;
-                selectedValues[1] = pair.Key.Price;
-                selectedValues[2] = pair.Value;
-                ShoppingCartGridView.Rows.Add(selectedValues);
+                object[] row = new object[3];
+                row[0] = item.Product.Name;
+                row[1] = item.Product.Price;
+                row[2] = item.Amount;
+                ShoppingCartGridView.Rows.Add(row);
             }
         }
     }
