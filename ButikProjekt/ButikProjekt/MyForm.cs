@@ -210,7 +210,7 @@ namespace ButikProjekt
         }
         public static void AddToCartClick(object sender, EventArgs e)
         {
-            var add = ((BuyButton)sender).Product;
+            var add = ((AddButton)sender).Product;
             Cart cartItem = new Cart
             {
                 Product = add,

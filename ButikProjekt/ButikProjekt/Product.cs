@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace ButikProjekt
 {
-    class BuyButton : Button
+    class AddButton : Button
     {
         public Product Product { get; set; }
     }
@@ -72,7 +72,7 @@ namespace ButikProjekt
                 Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
                 newItem.Controls.Add(description);
                 newItem.SetColumnSpan(description, 2);
-                BuyButton addButton = new BuyButton { Product = item, Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Margin = new Padding(10, 0, 10, 0) };
+                AddButton addButton = new AddButton { Product = item, Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Margin = new Padding(10, 0, 10, 0) };
 
                 newItem.SetColumnSpan(addButton, 2);
                 newItem.Controls.Add(addButton);
