@@ -9,7 +9,7 @@ namespace ButikProjekt
 {
     class Cart
     {
-        public Products Product;
+        public Product Product;
         public int Amount;
 
         public static List<Cart> CartItems = new List<Cart>();
@@ -24,7 +24,7 @@ namespace ButikProjekt
             {
                 string[] split = s.Split(';');
 
-                Products newProd = new Products()
+                Product newProd = new Product()
                 {
                     Name = split[0],
                     Description = split[1],

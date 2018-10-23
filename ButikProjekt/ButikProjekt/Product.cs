@@ -6,16 +6,21 @@ using System.Windows.Forms;
 
 namespace ButikProjekt
 {
-    public class Products
+    class BuyButton : Button
+    {
+        public Product Product { get; set; }
+    }
+
+    public class Product
     {
         public string Name;
         public string Description;
         public int Price;
         public string Image;
 
-        private static List<Products> ListProd = new List<Products>();
+        private static List<Product> ListProd = new List<Product>();
 
-        public static List<Products> GetProducts()
+        public static List<Product> GetProducts()
         {
             try
             {
@@ -27,7 +32,7 @@ namespace ButikProjekt
                 {
                     string[] split = s.Split(';');
 
-                    Products newProd = new Products()
+                    Product newProd = new Product()
                     {
                         Name = split[0],
                         Description = split[1],
@@ -48,7 +53,7 @@ namespace ButikProjekt
         {
             FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
 
-            foreach (Products item in ListProd)
+            foreach (Product item in ListProd)
             {
                 TableLayoutPanel newItem = new TableLayoutPanel()
                 {
@@ -67,7 +72,8 @@ namespace ButikProjekt
                 Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
                 newItem.Controls.Add(description);
                 newItem.SetColumnSpan(description, 2);
-                Button addButton = new Button { Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Tag = item, Margin = new Padding(10, 0, 10, 0) };
+                BuyButton addButton = new BuyButton { Product = item, Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Margin = new Padding(10, 0, 10, 0) };
+
                 newItem.SetColumnSpan(addButton, 2);
                 newItem.Controls.Add(addButton);
                 addButton.Click += MyForm.AddToCartClick;

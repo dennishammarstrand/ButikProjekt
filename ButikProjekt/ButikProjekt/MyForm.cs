@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using System.ComponentModel;
 using System.IO;
 
 namespace ButikProjekt
 {
+
     class MyForm : Form
     {
         private TableLayoutPanel MainLayout = new TableLayoutPanel()
@@ -17,8 +17,8 @@ namespace ButikProjekt
             Dock = DockStyle.Fill,
             ColumnCount = 2
         };
-        private List<Products> ListProd = Products.GetProducts();
-        private FlowLayoutPanel FlowLayout = Products.ProductPanelCreation();
+        private List<Product> ListProd = Product.GetProducts();
+        private FlowLayoutPanel FlowLayout = Product.ProductPanelCreation();
         private List<string> DiscountList = DiscountCodes.ReadCodes();
         private static DataGridView ShoppingCartGridView = new DataGridView
         {
@@ -56,6 +56,7 @@ namespace ButikProjekt
                 CartPriceSummary.Text = String.Format("Total Cost {0:C0}", CartSummary);
             }
         }
+        
 
         public MyForm()
         {
@@ -209,7 +210,7 @@ namespace ButikProjekt
         }
         public static void AddToCartClick(object sender, EventArgs e)
         {
-            var add = (Products)((Button)sender).Tag;
+            var add = ((BuyButton)sender).Product;
             Cart cartItem = new Cart
             {
                 Product = add,
