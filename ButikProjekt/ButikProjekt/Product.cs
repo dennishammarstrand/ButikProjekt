@@ -80,6 +80,16 @@ namespace ButikProjekt
             }
             return FlowLayout;
         }
+
+        public static bool operator ==(Product a, Product b)
+        {
+            return a.Name == b.Name;
+        }
+        public static bool operator !=(Product a, Product b)
+        {
+            return a.Name != b.Name;
+        }
     }
+
 
 }

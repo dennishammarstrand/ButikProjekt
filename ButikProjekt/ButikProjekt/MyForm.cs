@@ -217,7 +217,7 @@ namespace ButikProjekt
                 Amount = 1
             };
             CartSummary += add.Price;
-            var obj = Cart.CartItems.FirstOrDefault(x => x.Product.Name == add.Name);
+            var obj = Cart.CartItems.FirstOrDefault(x => x.Product == add);
             if (obj != null)
             {
                 obj.Amount++;
