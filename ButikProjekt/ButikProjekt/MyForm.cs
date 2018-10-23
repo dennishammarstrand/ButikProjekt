@@ -67,7 +67,17 @@ namespace ButikProjekt
             PrintToCartDataGrid();
             foreach (var item in Cart.CartItems)
             {
-                CartSummary += item.Product.Price;
+                if (item.Amount > 1)
+                {
+                    for (int i = 0; i < item.Amount; i++)
+                    {
+                        CartSummary += item.Product.Price;
+                    }
+                }
+                else
+                {
+                    CartSummary += item.Product.Price;
+                }
             }
             GetSetSummary = CartPriceSummary.Text;
 
