@@ -19,8 +19,7 @@ namespace ButikProjekt
         };
         private List<Product> ListProd = Product.GetProducts();
         private FlowLayoutPanel FlowLayout = Product.ProductPanelCreation();
-        private List<string[]> DiscountList = DiscountCodes.ReadCodes();
-        private static DataGridView ShoppingCartGridView = new DataGridView
+        public static DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
             ReadOnly = true,
@@ -44,9 +43,9 @@ namespace ButikProjekt
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
-        private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
-        private static int CartSummary;
-        private static Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
+        public static TextBox DiscountCodeTextBox = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
+        public static double CartSummary;
+        public static Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
         public static string GetSetSummary
         {
             get
@@ -64,7 +63,8 @@ namespace ButikProjekt
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
-            Icon = new Icon("MainFormIcon.ico");            
+            Icon = new Icon("MainFormIcon.ico");
+            DiscountCode.ReadCodes();
             Cart.GetSavedCartItems();
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
@@ -100,7 +100,7 @@ namespace ButikProjekt
             ButtonLayout.Controls.Add(Remove);
             ButtonLayout.Controls.Add(ClearCartButton);
             ButtonLayout.Controls.Add(Buy);
-            ButtonLayout.Controls.Add(DiscountCode);
+            ButtonLayout.Controls.Add(DiscountCodeTextBox);
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
@@ -110,9 +110,9 @@ namespace ButikProjekt
             ShoppingCartGridView.CellClick += DataGridCellClick;
             Remove.Click += RemoveFromCartClick;
             Buy.Click += BuyButtonClickEvent;
-            DiscountCode.Enter += TextBoxEnter;
-            DiscountCode.Leave += TextBoxLeave;
-            DiscountCode.KeyDown += DiscountCode_KeyDown;
+            DiscountCodeTextBox.Enter += TextBoxEnter;
+            DiscountCodeTextBox.Leave += TextBoxLeave;
+            DiscountCodeTextBox.KeyDown += DiscountCode_KeyDown;
             ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
@@ -151,33 +151,9 @@ namespace ButikProjekt
         }
         private void DiscountCode_KeyDown(object sender, KeyEventArgs e)
         {
-            int count = ShoppingCartGridView.Rows.Count;
-            object[] discountRow = new object[2];
-            if (!Cart.IsCartListEmpty())
+            if (e.KeyCode == Keys.Enter)
             {
-                if (e.KeyCode == Keys.Enter)
-                {
-                    foreach (string[] code in DiscountList)
-                    {
-                        if (code[0].Contains(DiscountCode.Text))
-                        {
-                            if (ShoppingCartGridView.Rows[count - 1].Cells[0].Value.ToString() != DiscountCode.Text)
-                            {
-                                discountRow[0] = DiscountCode.Text;
-                                discountRow[1] = "-1000";
-
-                                CartSummary -= 1000;
-                                GetSetSummary = CartPriceSummary.Text;
-
-                                ShoppingCartGridView.Rows.Add(discountRow);
-
-                                count = ShoppingCartGridView.Rows.Count;
-                                ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
-                            }
-                        }
-                    }
-                    DiscountCode.Enabled = false;
-                }
+                DiscountCode.AddDiscountCodeToCart();
             }
         }
         private void BuyButtonClickEvent(object sender, EventArgs e)
@@ -193,24 +169,24 @@ namespace ButikProjekt
                 MessageBox.Show(receipt, caption);
                 File.Delete(@"C:\Windows\Temp\SavedCart.csv");
                 ClearCart();
-                DiscountCode.Text = "";
-                DiscountCode.Enabled = true;
+                DiscountCodeTextBox.Text = "";
+                DiscountCodeTextBox.Enabled = true;
             }
         }
         private void TextBoxLeave(object sender, EventArgs e)
         {
-            if (DiscountCode.Text == "")
+            if (DiscountCodeTextBox.Text == "")
             {
-                DiscountCode.Text = "Discount Code";
-                DiscountCode.ForeColor = SystemColors.InactiveCaption;
+                DiscountCodeTextBox.Text = "Discount Code";
+                DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             }
         }
         private void TextBoxEnter(object sender, EventArgs e)
         {
-            if (DiscountCode.Text == "Discount Code")
+            if (DiscountCodeTextBox.Text == "Discount Code")
             {
-                DiscountCode.Text = "";
-                DiscountCode.ForeColor = Color.Black;
+                DiscountCodeTextBox.Text = "";
+                DiscountCodeTextBox.ForeColor = Color.Black;
             }
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
