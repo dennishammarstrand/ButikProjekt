@@ -63,6 +63,7 @@ namespace ButikProjekt
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "Camera store";
             Icon = new Icon("MainFormIcon.ico");
             DiscountCode.ReadCodes();
             Cart.GetSavedCartItems();
@@ -145,6 +146,9 @@ namespace ButikProjekt
         {
             ShoppingCartGridView.Rows.Clear();
             Cart.CartItems.Clear();
+            DiscountCodeTextBox.Enabled = true;
+            DiscountCodeTextBox.Text = "Discount Code";
+            DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             CartSummary = 0;
             GetSetSummary = CartPriceSummary.Text;
             Buy.Enabled = false;
