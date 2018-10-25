@@ -19,7 +19,7 @@ namespace ButikProjekt
         };
         private List<Product> ListProd = Product.GetProducts();
         private FlowLayoutPanel FlowLayout = Product.ProductPanelCreation();
-        private List<string> DiscountList = DiscountCodes.ReadCodes();
+        private List<string[]> DiscountList = DiscountCodes.ReadCodes();
         private static DataGridView ShoppingCartGridView = new DataGridView
         {
             Font = new Font("San Serif", 9f),
@@ -29,17 +29,19 @@ namespace ButikProjekt
             AutoSize = true,
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
             RowHeadersVisible = false,
-            BackgroundColor = SystemColors.Control,
+            BackgroundColor = Color.White,
             BorderStyle = BorderStyle.None,
             AllowUserToAddRows = false,
             AllowUserToDeleteRows = false,
             AllowUserToResizeColumns = false,
             AllowUserToResizeRows = false,
-            Dock = DockStyle.Fill
+            Dock = DockStyle.Fill,
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+            MultiSelect = false
         };
         private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
-        private Button Buy = new Button { Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
-        private Button ClearCart = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
+        private static Button Buy = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
+        private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
         private TextBox DiscountCode = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
@@ -62,7 +64,7 @@ namespace ButikProjekt
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
-            Icon = new Icon("MainFormIcon.ico");
+            Icon = new Icon("MainFormIcon.ico");            
             Cart.GetSavedCartItems();
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
@@ -96,7 +98,7 @@ namespace ButikProjekt
             MainLayout.Controls.Add(CartPriceSummary, 1, 1);
             MainLayout.Controls.Add(ButtonLayout, 1, 2);
             ButtonLayout.Controls.Add(Remove);
-            ButtonLayout.Controls.Add(ClearCart);
+            ButtonLayout.Controls.Add(ClearCartButton);
             ButtonLayout.Controls.Add(Buy);
             ButtonLayout.Controls.Add(DiscountCode);
 
@@ -111,53 +113,89 @@ namespace ButikProjekt
             DiscountCode.Enter += TextBoxEnter;
             DiscountCode.Leave += TextBoxLeave;
             DiscountCode.KeyDown += DiscountCode_KeyDown;
-            ClearCart.Click += ClearCartClick;
+            ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
+            Load += FormOpenEventHandler;
+        }
+        private void FormOpenEventHandler(object sender, EventArgs e)
+        {
+            if (Cart.CartItems.Count > 0)
+            {
+                Buy.Enabled = true;
+            }
         }
         private void SaveCartWhenExit(object sender, FormClosingEventArgs e)
         {
-            using (TextWriter tw = new StreamWriter(@"C:\Windows\Temp\SavedCart.csv"))
+            if (Cart.CartItems.Count > 0)
             {
-                foreach (var item in Cart.CartItems)
+                using (TextWriter tw = new StreamWriter(@"C:\Windows\Temp\SavedCart.csv"))
                 {
-                    tw.WriteLine(string.Format("{0};{1};{2};{3};{4}", item.Product.Name, item.Product.Description, item.Product.Price, item.Product.Image, item.Amount.ToString()));
+                    foreach (var item in Cart.CartItems)
+                    {
+                        tw.WriteLine(string.Format("{0};{1};{2};{3};{4}", item.Product.Name, item.Product.Description, item.Product.Price, item.Product.Image, item.Amount.ToString()));
+                    }
                 }
             }
         }
         private void ClearCartClick(object sender, EventArgs e)
         {
+            ClearCart();
+        }
+        private void ClearCart()
+        {
             ShoppingCartGridView.Rows.Clear();
             Cart.CartItems.Clear();
             CartSummary = 0;
             GetSetSummary = CartPriceSummary.Text;
+            Buy.Enabled = false;
         }
         private void DiscountCode_KeyDown(object sender, KeyEventArgs e)
         {
             int count = ShoppingCartGridView.Rows.Count;
             object[] discountRow = new object[2];
-            if (e.KeyCode == Keys.Enter)
+            if (!Cart.IsCartListEmpty())
             {
-                if (DiscountList.Contains(DiscountCode.Text))
+                if (e.KeyCode == Keys.Enter)
                 {
-                    if (ShoppingCartGridView.Rows[count - 1].Cells[0].Value.ToString() != DiscountCode.Text)
+                    foreach (string[] code in DiscountList)
                     {
-                        discountRow[0] = DiscountCode.Text;
-                        discountRow[1] = 1000;
+                        if (code[0].Contains(DiscountCode.Text))
+                        {
+                            if (ShoppingCartGridView.Rows[count - 1].Cells[0].Value.ToString() != DiscountCode.Text)
+                            {
+                                discountRow[0] = DiscountCode.Text;
+                                discountRow[1] = "-1000";
 
-                        CartSummary -= (int)discountRow[1];
-                        GetSetSummary = CartPriceSummary.Text;
+                                CartSummary -= 1000;
+                                GetSetSummary = CartPriceSummary.Text;
 
-                        ShoppingCartGridView.Rows.Add(discountRow);
+                                ShoppingCartGridView.Rows.Add(discountRow);
 
-                        count = ShoppingCartGridView.Rows.Count;
-                        ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                                count = ShoppingCartGridView.Rows.Count;
+                                ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                            }
+                        }
                     }
+                    DiscountCode.Enabled = false;
                 }
             }
         }
         private void BuyButtonClickEvent(object sender, EventArgs e)
         {
-            MessageBox.Show("Hej");
+            if (ShoppingCartGridView.RowCount > 0)
+            {
+                ShoppingCartGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithAutoHeaderText;
+                ShoppingCartGridView.SelectAll();
+                Clipboard.SetDataObject(ShoppingCartGridView.GetClipboardContent());
+                string receipt = String.Format("This is your receipt \r\n\n{0}\r\n\n{1}", Clipboard.GetText(), CartPriceSummary.Text);
+                string caption = "Receipt";
+
+                MessageBox.Show(receipt, caption);
+                File.Delete(@"C:\Windows\Temp\SavedCart.csv");
+                ClearCart();
+                DiscountCode.Text = "";
+                DiscountCode.Enabled = true;
+            }
         }
         private void TextBoxLeave(object sender, EventArgs e)
         {
@@ -200,6 +238,10 @@ namespace ButikProjekt
                     GetSetSummary = CartPriceSummary.Text;
                 }
             }
+            if(Cart.IsCartListEmpty())
+            {
+                Buy.Enabled = false;
+            }
         }
         private void DataGridCellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -231,6 +273,7 @@ namespace ButikProjekt
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
             GetSetSummary = CartPriceSummary.Text;
+            Buy.Enabled = true;
         }
         private static void PrintToCartDataGrid()
         {

@@ -80,7 +80,6 @@ namespace ButikProjekt
             }
             return FlowLayout;
         }
-
         public static bool operator ==(Product a, Product b)
         {
             return a.Name == b.Name;
@@ -90,6 +89,4 @@ namespace ButikProjekt
             return a.Name != b.Name;
         }
     }
-
-
 }

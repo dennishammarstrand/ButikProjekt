@@ -17,27 +17,37 @@ namespace ButikProjekt
         public static void GetSavedCartItems()
         {
             string[] content;
-
-            content = File.ReadAllLines(@"C:\Windows\Temp\SavedCart.csv");
-
-            foreach (string s in content)
+            if (File.Exists(@"C:\Windows\Temp\SavedCart.csv"))
             {
-                string[] split = s.Split(';');
+                content = File.ReadAllLines(@"C:\Windows\Temp\SavedCart.csv");
+                foreach (string s in content)
+                {
+                    string[] split = s.Split(';');
 
-                Product newProd = new Product()
-                {
-                    Name = split[0],
-                    Description = split[1],
-                    Price = int.Parse(split[2]),
-                    Image = split[3]
-                };
-                Cart savedCart = new Cart()
-                {
-                    Product = newProd,
-                    Amount = int.Parse(split[4])
-                };
-                CartItems.Add(savedCart);
+                    Product newProd = new Product()
+                    {
+                        Name = split[0],
+                        Description = split[1],
+                        Price = int.Parse(split[2]),
+                        Image = split[3]
+                    };
+                    Cart savedCart = new Cart()
+                    {
+                        Product = newProd,
+                        Amount = int.Parse(split[4])
+                    };
+                    CartItems.Add(savedCart);
+                }
             }
+            else
+            {
+                File.Create(@"C:\Windows\Temp\SavedCart.csv");
+            }
+
+        }
+        public static bool IsCartListEmpty()
+        {
+            return Cart.CartItems.Count == 0;
         }
         
     }

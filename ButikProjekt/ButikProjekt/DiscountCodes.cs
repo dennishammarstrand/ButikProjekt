@@ -11,9 +11,9 @@ namespace ButikProjekt
     class DiscountCodes
     {
 
-        public static List<string> ReadCodes()
+        public static List<string[]> ReadCodes()
         {
-            List<string> DiscountCodeList = new List<string>();
+            List<string[]> DiscountCodeList = new List<string[]>();
 
             try
             {
@@ -22,7 +22,8 @@ namespace ButikProjekt
 
                 foreach (string s in content)
                 {
-                    DiscountCodeList.Add(s);
+                    string[] split = s.Split(';');
+                    DiscountCodeList.Add(split);
                 }
                 return DiscountCodeList;
             }
