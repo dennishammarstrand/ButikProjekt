@@ -40,7 +40,7 @@ namespace ButikProjekt
             {
                 foreach (string[] code in DiscountCodeList)
                 {
-                    if (code[0].Contains(MyForm.DiscountCodeTextBox.Text))
+                    if (code[0] == MyForm.DiscountCodeTextBox.Text)
                     {
                         double discountValue = GetValueDiscount(code);
                         
@@ -54,9 +54,13 @@ namespace ButikProjekt
 
                         count = MyForm.ShoppingCartGridView.Rows.Count;
                         MyForm.ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
+                        MyForm.DiscountCodeTextBox.Enabled = false;
+                    }
+                    else
+                    {
+                        throw new Exception("Discount not valid!");
                     }
                 }
-                MyForm.DiscountCodeTextBox.Enabled = false;
             }
         }
         private static double GetValueDiscount(string[] code)

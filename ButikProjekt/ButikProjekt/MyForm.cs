@@ -41,7 +41,7 @@ namespace ButikProjekt
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow;
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
-        public static TextBox DiscountCodeTextBox = new TextBox { Text = "Discount Code", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
+        public static TextBox DiscountCodeTextBox = new TextBox { Text = "Discount Code, press Enter", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
         public static double CartSummary;
         public static Label CartPriceSummary = new Label { Text = String.Format("Total Cost {0:C0}", CartSummary), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
         public static string GetSetSummary
@@ -143,7 +143,7 @@ namespace ButikProjekt
             ShoppingCartGridView.Rows.Clear();
             Cart.CartItems.Clear();
             DiscountCodeTextBox.Enabled = true;
-            DiscountCodeTextBox.Text = "Discount Code";
+            DiscountCodeTextBox.Text = "Discount Code, press Enter";
             DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             CartSummary = 0;
             GetSetSummary = CartPriceSummary.Text;
@@ -153,7 +153,14 @@ namespace ButikProjekt
         {
             if (e.KeyCode == Keys.Enter)
             {
-                DiscountCode.AddDiscountCodeToCart();
+                try
+                {
+                    DiscountCode.AddDiscountCodeToCart();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         private void BuyButtonClickEvent(object sender, EventArgs e)
@@ -175,13 +182,13 @@ namespace ButikProjekt
         {
             if (DiscountCodeTextBox.Text == "")
             {
-                DiscountCodeTextBox.Text = "Discount Code";
+                DiscountCodeTextBox.Text = "Discount Code, press Enter";
                 DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             }
         }
         private void TextBoxEnter(object sender, EventArgs e)
         {
-            if (DiscountCodeTextBox.Text == "Discount Code")
+            if (DiscountCodeTextBox.Text == "Discount Code, press Enter")
             {
                 DiscountCodeTextBox.Text = "";
                 DiscountCodeTextBox.ForeColor = Color.Black;
