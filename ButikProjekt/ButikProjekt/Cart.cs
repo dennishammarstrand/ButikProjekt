@@ -9,34 +9,35 @@ namespace ButikProjekt
 {
     class Cart
     {
-        public Product Product;
-        public int Amount;
+        public Product Product { get; set; }
+        public int Amount { get; set; }
 
         public static List<Cart> CartItems = new List<Cart>();
         
+        //Adds our saved cart products to our cart list 
         public static void GetSavedCartItems()
         {
-            string[] content;
+            string[] fileContent;
             if (File.Exists(@"C:\Windows\Temp\SavedCart.csv"))
             {
-                content = File.ReadAllLines(@"C:\Windows\Temp\SavedCart.csv");
-                foreach (string s in content)
+                fileContent = File.ReadAllLines(@"C:\Windows\Temp\SavedCart.csv");
+                foreach (string s in fileContent)
                 {
                     string[] split = s.Split(';');
 
-                    Product newProd = new Product()
+                    Product newProduct = new Product()
                     {
                         Name = split[0],
                         Description = split[1],
                         Price = int.Parse(split[2]),
                         Image = split[3]
                     };
-                    Cart savedCart = new Cart()
+                    Cart newCartItem = new Cart()
                     {
-                        Product = newProd,
+                        Product = newProduct,
                         Amount = int.Parse(split[4])
                     };
-                    CartItems.Add(savedCart);
+                    CartItems.Add(newCartItem);
                 }
             }
             else
@@ -45,6 +46,7 @@ namespace ButikProjekt
             }
 
         }
+        //Checks whether our cart is empty
         public static bool IsCartListEmpty()
         {
             return Cart.CartItems.Count == 0;

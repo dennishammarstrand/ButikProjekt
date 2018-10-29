@@ -13,14 +13,15 @@ namespace ButikProjekt
     {
         public static List<string[]> DiscountCodeList = new List<string[]>();
         
-        public static void ReadCodes()
+        //Adds discount codes from csv to discount code list
+        public static void AddDiscountCodesToList()
         {
             try
             {
-                string[] content;
-                content = File.ReadAllLines("discountCodes.csv");
+                string[] fileContent;
+                fileContent = File.ReadAllLines("discountCodes.csv");
 
-                foreach (string s in content)
+                foreach (string s in fileContent)
                 {
                     string[] split = s.Split(';');
                     DiscountCodeList.Add(split);
@@ -31,61 +32,59 @@ namespace ButikProjekt
                 throw new Exception(ex.Message);
             }
         }
+        //Adds the discount code and it's discounted value to the datagridview with formatting and 
+        //updates the new total price accordingly.
         public static void AddDiscountCodeToCart()
         {
-
-            int count = MyForm.ShoppingCartGridView.Rows.Count;
+            int rowCount = MyForm.ShoppingCartGridView.Rows.Count;
             object[] discountRow = new object[2];
             if (!Cart.IsCartListEmpty())
             {
-                foreach (string[] code in DiscountCodeList)
+                string[] discountCodeEntered = DiscountCodeList.First(x => x[0] == MyForm.DiscountCodeTextBox.Text);
+                if (discountCodeEntered != null)
                 {
-                    if (code[0] == MyForm.DiscountCodeTextBox.Text)
-                    {
-                        double discountValue = GetValueDiscount(code);
+                    double discountValue = GetValueDiscount(discountCodeEntered);
                         
-                        discountRow[0] = MyForm.DiscountCodeTextBox.Text;
-                        discountRow[1] = "-" + discountValue;
+                    discountRow[0] = MyForm.DiscountCodeTextBox.Text;
+                    discountRow[1] = "-" + discountValue;
 
-                        MyForm.CartSummary -= discountValue;
-                        MyForm.GetSetSummary = MyForm.CartPriceSummary.Text;
+                    MyForm.CartSummaryValue -= discountValue;
+                    MyForm.PriceSummaryTextFormatting = MyForm.CartPriceSummaryLabel.Text;
 
-                        MyForm.ShoppingCartGridView.Rows.Add(discountRow);
+                    MyForm.ShoppingCartGridView.Rows.Add(discountRow);
 
-                        count = MyForm.ShoppingCartGridView.Rows.Count;
-                        MyForm.ShoppingCartGridView.Rows[count - 1].Cells[1].Style.ForeColor = Color.Red;
-                        MyForm.DiscountCodeTextBox.Enabled = false;
-                    }
-                    else
-                    {
-                        throw new Exception("Discount not valid!");
-                    }
+                    MyForm.ShoppingCartGridView.Rows[rowCount].Cells[1].Style.ForeColor = Color.Red;
+                    MyForm.DiscountCodeTextBox.Enabled = false;
+                }
+                else
+                {
+                    throw new Exception("Discount not valid!");
                 }
             }
         }
-        private static double GetValueDiscount(string[] code)
+        //Get each discount codes specific discount reduction
+        private static double GetValueDiscount(string[] discountCode)
         {
-            if (code[1] == "Value")
+            if (discountCode[1] == "Value")
             {
-                return int.Parse(code[2]);
+                return int.Parse(discountCode[2]);
             }
-            else if (code[1] == "2for1")
+            else if (discountCode[1] == "2for1")
             {
-                var canons = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
+                List<Cart> canonOrderedByPrice = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
 
-                if (canons.Count() > 1)
+                if (canonOrderedByPrice.Count() > 1)
                 {
-                    return canons[0].Product.Price;
+                    return canonOrderedByPrice[0].Product.Price;
                 }
                 else
                 {
                     throw new Exception("Discount not valid! Add another canon!");
                 }
             }
-            else if (code[1] == "Percent")
+            else if (discountCode[1] == "Percent")
             {
-                double x = MyForm.CartSummary * (int.Parse(code[2]) / 100.0);
-                return x;
+                return MyForm.CartSummaryValue * (int.Parse(discountCode[2]) / 100.0);
             }
             throw new Exception("Discount not valid");
         }

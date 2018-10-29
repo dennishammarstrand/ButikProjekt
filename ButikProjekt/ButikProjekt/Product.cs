@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace ButikProjekt
 {
+    //Gives our buttons the property of our products
     class AddButton : Button
     {
         public Product Product { get; set; }
@@ -13,26 +14,27 @@ namespace ButikProjekt
 
     public class Product
     {
-        public string Name;
-        public string Description;
-        public int Price;
-        public string Image;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Price { get; set; }
+        public string Image { get; set; }
 
-        private static List<Product> ListProd = new List<Product>();
+        private static List<Product> ListOfProducts = new List<Product>();
 
-        public static List<Product> GetProducts()
+        //Adds the products from the csv file to the products list
+        public static void AddProductsToList()
         {
             try
             {
-                string[] content;
+                string[] fileContent;
 
-                content = File.ReadAllLines("products.csv");
+                fileContent = File.ReadAllLines("products.csv");
 
-                foreach (string s in content)
+                foreach (string s in fileContent)
                 {
                     string[] split = s.Split(';');
 
-                    Product newProd = new Product()
+                    Product newProduct = new Product()
                     {
                         Name = split[0],
                         Description = split[1],
@@ -40,45 +42,48 @@ namespace ButikProjekt
                         Image = split[3]
                     };
 
-                    ListProd.Add(newProd);
+                    ListOfProducts.Add(newProduct);
                 }
-                return ListProd;
             }
             catch (FileNotFoundException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        public static FlowLayoutPanel ProductPanelCreation()
+        //Creates a flowlayoutpanel for our whole inventory where every product gets an own
+        //tablelayoutpanel to display all it's properties.
+        public static void ProductPanelCreation()
         {
+
             FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
 
-            foreach (Product item in ListProd)
+            foreach (Product item in ListOfProducts)
             {
-                TableLayoutPanel newItem = new TableLayoutPanel()
+                TableLayoutPanel newProductTemplate = new TableLayoutPanel()
                 {
                     ColumnCount = 2,
                     Size = new Size(210, 340),
                     BackColor = Color.White
                 };
-                FlowLayout.Controls.Add(newItem);
-                PictureBox ProdImage = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
-                newItem.Controls.Add(ProdImage);
-                newItem.SetColumnSpan(ProdImage, 2);
-                Label ProdName = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
-                newItem.Controls.Add(ProdName);
-                Label prodPrice = new Label { Text = String.Format("{0:C0}", item.Price), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
-                newItem.Controls.Add(prodPrice);
-                Label description = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
-                newItem.Controls.Add(description);
-                newItem.SetColumnSpan(description, 2);
-                AddButton addButton = new AddButton { Product = item, Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Margin = new Padding(10, 0, 10, 0) };
+                FlowLayout.Controls.Add(newProductTemplate);
+                PictureBox productImagePictureBox = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
+                newProductTemplate.Controls.Add(productImagePictureBox);
+                newProductTemplate.SetColumnSpan(productImagePictureBox, 2);
+                Label produtNameLabel = new Label { Text = item.Name, Font = new Font("San serif", 10F) };
+                newProductTemplate.Controls.Add(produtNameLabel);
+                Label productPriceLabel = new Label { Text = String.Format("{0:C0}", item.Price), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, TextAlign = ContentAlignment.TopRight };
+                newProductTemplate.Controls.Add(productPriceLabel);
+                Label productDescriptionLabel = new Label { Text = item.Description, Dock = DockStyle.Fill, Size = new Size(200, 65), AutoEllipsis = true };
+                newProductTemplate.Controls.Add(productDescriptionLabel);
+                newProductTemplate.SetColumnSpan(productDescriptionLabel, 2);
+                AddButton productAddButton = new AddButton { Product = item, Text = "Add to cart", AutoSize = true, Dock = DockStyle.Top, Font = new Font("San serif", 12F), BackColor = Color.ForestGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Margin = new Padding(10, 0, 10, 0) };
 
-                newItem.SetColumnSpan(addButton, 2);
-                newItem.Controls.Add(addButton);
-                addButton.Click += MyForm.AddToCartClick;
+                newProductTemplate.SetColumnSpan(productAddButton, 2);
+                newProductTemplate.Controls.Add(productAddButton);
+                productAddButton.Click += MyForm.AddToCartClick;
             }
-            return FlowLayout;
+            MyForm.MainLayout.Controls.Add(FlowLayout);
+            MyForm.MainLayout.SetRowSpan(FlowLayout, 3);
         }
         public static bool operator ==(Product a, Product b)
         {
