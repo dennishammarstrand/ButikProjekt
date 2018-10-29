@@ -9,7 +9,6 @@ using System.IO;
 
 namespace ButikProjekt
 {
-
     class MyForm : Form
     {
         private TableLayoutPanel MainLayout = new TableLayoutPanel()
@@ -35,8 +34,7 @@ namespace ButikProjekt
             AllowUserToResizeColumns = false,
             AllowUserToResizeRows = false,
             Dock = DockStyle.Fill,
-            SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-            MultiSelect = false
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect
         };
         private Button Remove = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
         private static Button Buy = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
@@ -57,8 +55,6 @@ namespace ButikProjekt
                 CartPriceSummary.Text = String.Format("Total Cost {0:C0}", CartSummary);
             }
         }
-        
-
         public MyForm()
         {
             ClientSize = new Size(1000, 700);
@@ -164,13 +160,13 @@ namespace ButikProjekt
         {
             if (ShoppingCartGridView.RowCount > 0)
             {
-                ShoppingCartGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithAutoHeaderText;
+                ShoppingCartGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
                 ShoppingCartGridView.SelectAll();
                 Clipboard.SetDataObject(ShoppingCartGridView.GetClipboardContent());
                 string receipt = String.Format("This is your receipt \r\n\n{0}\r\n\n{1}", Clipboard.GetText(), CartPriceSummary.Text);
                 string caption = "Receipt";
 
-                MessageBox.Show(receipt, caption);
+                MessageBox.Show(receipt, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 File.Delete(@"C:\Windows\Temp\SavedCart.csv");
                 ClearCart();
                 DiscountCodeTextBox.Text = "";

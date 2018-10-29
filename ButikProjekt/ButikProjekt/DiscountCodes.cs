@@ -12,8 +12,7 @@ namespace ButikProjekt
     class DiscountCode
     {
         public static List<string[]> DiscountCodeList = new List<string[]>();
-
-
+        
         public static void ReadCodes()
         {
             try
@@ -32,7 +31,6 @@ namespace ButikProjekt
                 throw new Exception(ex.Message);
             }
         }
-
         public static void AddDiscountCodeToCart()
         {
 
@@ -61,11 +59,8 @@ namespace ButikProjekt
                 MyForm.DiscountCodeTextBox.Enabled = false;
             }
         }
-
         private static double GetValueDiscount(string[] code)
         {
-
-
             if (code[1] == "Value")
             {
                 return int.Parse(code[2]);
