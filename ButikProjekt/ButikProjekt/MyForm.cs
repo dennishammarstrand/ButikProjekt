@@ -104,7 +104,7 @@ namespace ButikProjekt
             ShoppingCartGridView.Columns[1].Name = "Price";
             ShoppingCartGridView.Columns[2].Name = "Quantity";
             ShoppingCartGridView.Columns[0].Width = 150;
-            
+
             ShoppingCartGridView.CellClick += DataGridCellClick;
             RemoveButton.Click += RemoveFromCartClick;
             BuyButton.Click += BuyButtonClick;
@@ -143,7 +143,7 @@ namespace ButikProjekt
             ClearCart();
         }
         //Clears cart a resets the values of everything to default
-        private void ClearCart()
+        public static void ClearCart()
         {
             ShoppingCartGridView.Rows.Clear();
             Cart.CartItems.Clear();
@@ -173,6 +173,11 @@ namespace ButikProjekt
         //
         private void BuyButtonClick(object sender, EventArgs e)
         {
+            ReceiptWindow receiptWindow = new ReceiptWindow();
+
+            receiptWindow.ShowDialog();
+
+            /*
             if (ShoppingCartGridView.RowCount > 0)
             {
                 ShoppingCartGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -184,6 +189,7 @@ namespace ButikProjekt
                 MessageBox.Show(receipt, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 ClearCart();
             }
+            */
         }
         //Changes the description text of the Discount textbox when leaving the textbox
         private void DiscountCodeTextBoxLeave(object sender, EventArgs e)
