@@ -67,12 +67,11 @@ namespace ButikProjekt
             }
             else if (code[1] == "2for1")
             {
-                var canons = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon"));
+                var canons = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
 
                 if (canons.Count() > 1)
                 {
-                    var cheapestCanon = canons.OrderBy(z => z.Product.Price).ToList();
-                    return cheapestCanon[0].Product.Price;
+                    return canons[0].Product.Price;
                 }
                 else
                 {

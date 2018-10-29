@@ -169,8 +169,6 @@ namespace ButikProjekt
                 MessageBox.Show(receipt, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 File.Delete(@"C:\Windows\Temp\SavedCart.csv");
                 ClearCart();
-                DiscountCodeTextBox.Text = "";
-                DiscountCodeTextBox.Enabled = true;
             }
         }
         private void TextBoxLeave(object sender, EventArgs e)
