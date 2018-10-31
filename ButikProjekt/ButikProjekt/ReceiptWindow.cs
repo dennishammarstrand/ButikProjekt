@@ -28,27 +28,15 @@ namespace ButikProjekt
             AllowUserToResizeColumns = false,
             AllowUserToResizeRows = false
         };
-        public static double ReceiptSummaryValue = ShopWindow.CartSummaryValue;
+        public static double ReceiptSummaryValue;
         public static Label TotalPriceLabel = new Label
         {
-            Text = String.Format("Total Cost {0:C0}", ReceiptSummaryValue),
             Font = new Font("San serif", 10F, FontStyle.Bold),
             ForeColor = Color.Red,
             Anchor = AnchorStyles.Top,
             Dock = DockStyle.Top,
             TextAlign = ContentAlignment.TopLeft,
         };
-        public static string PriceSummaryTextFormatting
-        {
-            get
-            {
-                return TotalPriceLabel.Text;
-            }
-            set
-            {
-                TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", ReceiptSummaryValue);
-            }
-        }
         private static DateTime TodaysDate
         {
             get
@@ -95,6 +83,7 @@ namespace ButikProjekt
             ReceiptDataGridView.Columns[0].Width = 250;
 
             AddCartToReceipt();
+            SetReceiptSummaryValue();
 
             FormClosing += ClosingReceipt;
             DiscountCodeTextBox.Enter += DiscountCodeTextBoxEnter;
@@ -114,7 +103,8 @@ namespace ButikProjekt
         }
         private void ClosingReceipt(object sender, FormClosingEventArgs e)
         {
-            ShopWindow.ClearCart();
+            ReceiptDataGridView.Rows.Clear();
+            ReceiptDataGridView.Refresh();
             ActivateDiscountButton.Enabled = true;
             DiscountCodeTextBox.Enabled = true;
             DiscountCodeTextBox.Text = "Discount Code";
@@ -122,7 +112,6 @@ namespace ButikProjekt
         }
         public void AddCartToReceipt()
         {
-            int lastRow = ShopWindow.ShoppingCartGridView.Rows.Count;
             foreach (Cart cartItem in Cart.CartItems)
             {
                 object[] row = new object[3];
@@ -149,6 +138,13 @@ namespace ButikProjekt
                 DiscountCodeTextBox.Text = "";
                 DiscountCodeTextBox.ForeColor = Color.Black;
             }
+        }
+        public static void SetReceiptSummaryValue()
+        {
+            var summary = Cart.CartItems.Sum(x => x.Product.Price * x.Amount);
+            ReceiptSummaryValue = summary;
+            TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", summary);
+
         }
     }
 }

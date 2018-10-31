@@ -36,24 +36,24 @@ namespace ButikProjekt
         //updates the new total price accordingly.
         public static void AddDiscountCodeToReceipt()
         {
-            int rowCount = ReceiptWindow.ReceiptDataGridView.Rows.Count;
-            object[] discountRow = new object[3];
             if (!Cart.IsCartListEmpty())
             {
                 string[] discountCodeEntered = DiscountCodeList.First(x => x[0] == ReceiptWindow.DiscountCodeTextBox.Text);
                 if (discountCodeEntered != null)
                 {
+                    object[] discountRow = new object[3];
                     double discountValue = GetValueDiscount(discountCodeEntered);
                         
                     discountRow[0] = ReceiptWindow.DiscountCodeTextBox.Text;
                     discountRow[2] = "-" + discountValue;
 
                     ReceiptWindow.ReceiptSummaryValue -= discountValue;
-                    ReceiptWindow.PriceSummaryTextFormatting = ReceiptWindow.TotalPriceLabel.Text;
+                    ReceiptWindow.TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", ReceiptWindow.ReceiptSummaryValue);
 
                     ReceiptWindow.ReceiptDataGridView.Rows.Add(discountRow);
 
-                    ReceiptWindow.ReceiptDataGridView.Rows[rowCount].Cells[2].Style.ForeColor = Color.Red;
+                    int rowCount = ReceiptWindow.ReceiptDataGridView.Rows.Count;
+                    ReceiptWindow.ReceiptDataGridView.Rows[rowCount - 1].Cells[2].Style.ForeColor = Color.Red;
                     ReceiptWindow.ActivateDiscountButton.Enabled = false;
                     ReceiptWindow.DiscountCodeTextBox.Enabled = false;
                 }

@@ -141,11 +141,8 @@ namespace ButikProjekt
         public static void ClearCart()
         {
             ShoppingCartGridView.Rows.Clear();
-            ReceiptWindow.ReceiptDataGridView.Rows.Clear();
             Cart.CartItems.Clear();
             CartSummaryValue = 0;
-            ReceiptWindow.ReceiptSummaryValue = 0;
-            ReceiptWindow.PriceSummaryTextFormatting = ReceiptWindow.TotalPriceLabel.Text;
             PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
             BuyButton.Enabled = false;
             File.Delete(@"C:\Windows\Temp\SavedCart.csv");
@@ -154,6 +151,7 @@ namespace ButikProjekt
         private void BuyButtonClick(object sender, EventArgs e)
         {
             ReceiptWindow receiptWindow = new ReceiptWindow();
+            ReceiptWindow.SetReceiptSummaryValue();
 
             receiptWindow.ShowDialog();
         }
