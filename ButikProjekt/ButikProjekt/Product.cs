@@ -80,10 +80,10 @@ namespace ButikProjekt
 
                 newProductTemplate.SetColumnSpan(productAddButton, 2);
                 newProductTemplate.Controls.Add(productAddButton);
-                productAddButton.Click += MyForm.AddToCartClick;
+                productAddButton.Click += ShopWindow.AddToCartClick;
             }
-            MyForm.MainLayout.Controls.Add(FlowLayout);
-            MyForm.MainLayout.SetRowSpan(FlowLayout, 3);
+            ShopWindow.MainLayout.Controls.Add(FlowLayout);
+            ShopWindow.MainLayout.SetRowSpan(FlowLayout, 3);
         }
         public static bool operator ==(Product a, Product b)
         {

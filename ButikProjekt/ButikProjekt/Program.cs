@@ -15,7 +15,7 @@ namespace ButikProjekt
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MyForm());
+            Application.Run(new ShopWindow());
         }
     }
 }

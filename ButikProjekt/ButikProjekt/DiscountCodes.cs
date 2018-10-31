@@ -34,27 +34,28 @@ namespace ButikProjekt
         }
         //Adds the discount code and it's discounted value to the datagridview with formatting and 
         //updates the new total price accordingly.
-        public static void AddDiscountCodeToCart()
+        public static void AddDiscountCodeToReceipt()
         {
-            int rowCount = MyForm.ShoppingCartGridView.Rows.Count;
-            object[] discountRow = new object[2];
+            int rowCount = ReceiptWindow.ReceiptDataGridView.Rows.Count;
+            object[] discountRow = new object[3];
             if (!Cart.IsCartListEmpty())
             {
-                string[] discountCodeEntered = DiscountCodeList.First(x => x[0] == MyForm.DiscountCodeTextBox.Text);
+                string[] discountCodeEntered = DiscountCodeList.First(x => x[0] == ReceiptWindow.DiscountCodeTextBox.Text);
                 if (discountCodeEntered != null)
                 {
                     double discountValue = GetValueDiscount(discountCodeEntered);
                         
-                    discountRow[0] = MyForm.DiscountCodeTextBox.Text;
-                    discountRow[1] = "-" + discountValue;
+                    discountRow[0] = ReceiptWindow.DiscountCodeTextBox.Text;
+                    discountRow[2] = "-" + discountValue;
 
-                    MyForm.CartSummaryValue -= discountValue;
-                    MyForm.PriceSummaryTextFormatting = MyForm.CartPriceSummaryLabel.Text;
+                    ReceiptWindow.ReceiptSummaryValue -= discountValue;
+                    ReceiptWindow.PriceSummaryTextFormatting = ReceiptWindow.TotalPriceLabel.Text;
 
-                    MyForm.ShoppingCartGridView.Rows.Add(discountRow);
+                    ReceiptWindow.ReceiptDataGridView.Rows.Add(discountRow);
 
-                    MyForm.ShoppingCartGridView.Rows[rowCount].Cells[1].Style.ForeColor = Color.Red;
-                    MyForm.DiscountCodeTextBox.Enabled = false;
+                    ReceiptWindow.ReceiptDataGridView.Rows[rowCount].Cells[2].Style.ForeColor = Color.Red;
+                    ReceiptWindow.ActivateDiscountButton.Enabled = false;
+                    ReceiptWindow.DiscountCodeTextBox.Enabled = false;
                 }
                 else
                 {
@@ -84,7 +85,7 @@ namespace ButikProjekt
             }
             else if (discountCode[1] == "Percent")
             {
-                return MyForm.CartSummaryValue * (int.Parse(discountCode[2]) / 100.0);
+                return ReceiptWindow.ReceiptSummaryValue * (int.Parse(discountCode[2]) / 100.0);
             }
             throw new Exception("Discount not valid");
         }

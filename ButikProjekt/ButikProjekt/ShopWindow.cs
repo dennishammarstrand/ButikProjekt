@@ -9,7 +9,7 @@ using System.IO;
 
 namespace ButikProjekt
 {
-    class MyForm : Form
+    class ShopWindow : Form
     {
         //Main form variable declarations
         public static TableLayoutPanel MainLayout = new TableLayoutPanel()
@@ -40,7 +40,6 @@ namespace ButikProjekt
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow { get; set; }
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
-        public static TextBox DiscountCodeTextBox = new TextBox { Text = "Discount Code, press Enter", Font = new Font("San Serif", 15f), Dock = DockStyle.Bottom, ForeColor = SystemColors.InactiveCaption };
         public static double CartSummaryValue { get; set; }
         public static Label CartPriceSummaryLabel = new Label { Text = String.Format("Total Cost {0:C0}", CartSummaryValue), Font = new Font("San serif", 10F, FontStyle.Bold), ForeColor = Color.Red, Anchor = AnchorStyles.Bottom, Dock = DockStyle.Bottom };
         public static string PriceSummaryTextFormatting
@@ -55,7 +54,7 @@ namespace ButikProjekt
             }
         }
 
-        public MyForm()
+        public ShopWindow()
         {
             ClientSize = new Size(1000, 700);
             StartPosition = FormStartPosition.CenterScreen;
@@ -98,7 +97,6 @@ namespace ButikProjekt
             ButtonLayout.Controls.Add(RemoveButton);
             ButtonLayout.Controls.Add(ClearCartButton);
             ButtonLayout.Controls.Add(BuyButton);
-            ButtonLayout.Controls.Add(DiscountCodeTextBox);
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
@@ -108,9 +106,6 @@ namespace ButikProjekt
             ShoppingCartGridView.CellClick += DataGridCellClick;
             RemoveButton.Click += RemoveFromCartClick;
             BuyButton.Click += BuyButtonClick;
-            DiscountCodeTextBox.Enter += DiscountCodeTextBoxEnter;
-            DiscountCodeTextBox.Leave += DiscountCodeTextBoxLeave;
-            DiscountCodeTextBox.KeyDown += DiscountCodeKeyDown;
             ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
@@ -146,29 +141,14 @@ namespace ButikProjekt
         public static void ClearCart()
         {
             ShoppingCartGridView.Rows.Clear();
+            ReceiptWindow.ReceiptDataGridView.Rows.Clear();
             Cart.CartItems.Clear();
-            DiscountCodeTextBox.Enabled = true;
-            DiscountCodeTextBox.Text = "Discount Code, press Enter";
-            DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             CartSummaryValue = 0;
+            ReceiptWindow.ReceiptSummaryValue = 0;
+            ReceiptWindow.PriceSummaryTextFormatting = ReceiptWindow.TotalPriceLabel.Text;
             PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
             BuyButton.Enabled = false;
             File.Delete(@"C:\Windows\Temp\SavedCart.csv");
-        }
-        //Checks if you've pressed enter after entering a discount code and calls discount code methods
-        private void DiscountCodeKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                try
-                {
-                    DiscountCode.AddDiscountCodeToCart();
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
         }
         //
         private void BuyButtonClick(object sender, EventArgs e)
@@ -176,38 +156,6 @@ namespace ButikProjekt
             ReceiptWindow receiptWindow = new ReceiptWindow();
 
             receiptWindow.ShowDialog();
-
-            /*
-            if (ShoppingCartGridView.RowCount > 0)
-            {
-                ShoppingCartGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-                ShoppingCartGridView.SelectAll();
-                Clipboard.SetDataObject(ShoppingCartGridView.GetClipboardContent());
-                string receipt = String.Format("This is your receipt \r\n\n{0}\r\n\n{1}", Clipboard.GetText(), CartPriceSummaryLabel.Text);
-                string caption = "Receipt";
-
-                MessageBox.Show(receipt, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
-                ClearCart();
-            }
-            */
-        }
-        //Changes the description text of the Discount textbox when leaving the textbox
-        private void DiscountCodeTextBoxLeave(object sender, EventArgs e)
-        {
-            if (DiscountCodeTextBox.Text == "")
-            {
-                DiscountCodeTextBox.Text = "Discount Code, press Enter";
-                DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
-            }
-        }
-        //Changes the description text of the Discount textbox when entering the textbox 
-        private void DiscountCodeTextBoxEnter(object sender, EventArgs e)
-        {
-            if (DiscountCodeTextBox.Text == "Discount Code, press Enter")
-            {
-                DiscountCodeTextBox.Text = "";
-                DiscountCodeTextBox.ForeColor = Color.Black;
-            }
         }
         //Handles the remove button and checks if the product exists in the cart and at what
         //index in the cart. Given what item you've clicked in the datagridview.
