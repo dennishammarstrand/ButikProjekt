@@ -36,7 +36,7 @@ namespace ButikProjekt
             SelectionMode = DataGridViewSelectionMode.FullRowSelect
         };
         private Button RemoveButton = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
-        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Check Out", AutoSize = true, Dock = DockStyle.Top };
+        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Checkout", AutoSize = true, Dock = DockStyle.Top };
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow { get; set; }
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
@@ -140,12 +140,15 @@ namespace ButikProjekt
         //Clears cart a resets the values of everything to default
         public static void ClearCart()
         {
-            ShoppingCartGridView.Rows.Clear();
-            Cart.CartItems.Clear();
-            CartSummaryValue = 0;
-            PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
-            CheckOutButton.Enabled = false;
-            File.Delete(@"C:\Windows\Temp\SavedCart.csv");
+            if (!Cart.IsCartListEmpty() && File.Exists(@"C:\Windows\Temp\SavedCart.csv"))
+            {
+                ShoppingCartGridView.Rows.Clear();
+                Cart.CartItems.Clear();
+                CartSummaryValue = 0;
+                PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
+                CheckOutButton.Enabled = false;
+                File.Delete(@"C:\Windows\Temp\SavedCart.csv");
+            }
         }
         //
         private void BuyButtonClick(object sender, EventArgs e)
@@ -229,7 +232,7 @@ namespace ButikProjekt
             {
                 object[] row = new object[3];
                 row[0] = item.Product.Name;
-                row[1] = item.Product.Price;
+                row[1] = String.Format("{0:C0}", item.Product.Price);
                 row[2] = item.Amount;
                 ShoppingCartGridView.Rows.Add(row);
             }

@@ -44,7 +44,6 @@ namespace ButikProjekt
             {
                 File.Create(@"C:\Windows\Temp\SavedCart.csv");
             }
-
         }
         //Checks whether our cart is empty
         public static bool IsCartListEmpty()

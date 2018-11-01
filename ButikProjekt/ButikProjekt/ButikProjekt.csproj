@@ -93,6 +93,9 @@
     <Content Include="kamera_bilder\d810.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="kamera_bilder\k-1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="kamera_bilder\m10.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
