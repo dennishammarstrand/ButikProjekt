@@ -36,7 +36,7 @@ namespace ButikProjekt
             SelectionMode = DataGridViewSelectionMode.FullRowSelect
         };
         private Button RemoveButton = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
-        private static Button BuyButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Buy", AutoSize = true, Dock = DockStyle.Top };
+        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Check Out", AutoSize = true, Dock = DockStyle.Top };
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow { get; set; }
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
@@ -96,7 +96,7 @@ namespace ButikProjekt
             MainLayout.Controls.Add(ButtonLayout, 1, 2);
             ButtonLayout.Controls.Add(RemoveButton);
             ButtonLayout.Controls.Add(ClearCartButton);
-            ButtonLayout.Controls.Add(BuyButton);
+            ButtonLayout.Controls.Add(CheckOutButton);
 
             ShoppingCartGridView.Columns[0].Name = "Product";
             ShoppingCartGridView.Columns[1].Name = "Price";
@@ -105,7 +105,7 @@ namespace ButikProjekt
 
             ShoppingCartGridView.CellClick += DataGridCellClick;
             RemoveButton.Click += RemoveFromCartClick;
-            BuyButton.Click += BuyButtonClick;
+            CheckOutButton.Click += BuyButtonClick;
             ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
@@ -115,7 +115,7 @@ namespace ButikProjekt
         {
             if (!Cart.IsCartListEmpty())
             {
-                BuyButton.Enabled = true;
+                CheckOutButton.Enabled = true;
             }
         }
         //Saves our cart to a csv file
@@ -144,7 +144,7 @@ namespace ButikProjekt
             Cart.CartItems.Clear();
             CartSummaryValue = 0;
             PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
-            BuyButton.Enabled = false;
+            CheckOutButton.Enabled = false;
             File.Delete(@"C:\Windows\Temp\SavedCart.csv");
         }
         //
@@ -184,7 +184,7 @@ namespace ButikProjekt
             }
             if(Cart.IsCartListEmpty())
             {
-                BuyButton.Enabled = false;
+                CheckOutButton.Enabled = false;
             }
         }
         //Sets a varible to a index value given what row in the datagridview you've clicked
@@ -220,7 +220,7 @@ namespace ButikProjekt
             ShoppingCartGridView.Rows.Clear();
             PrintToCartDataGrid();
             PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
-            BuyButton.Enabled = true;
+            CheckOutButton.Enabled = true;
         }
         //Populats our datagridview with our list of cart products
         private static void PrintToCartDataGrid()

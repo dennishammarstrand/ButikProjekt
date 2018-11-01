@@ -54,6 +54,7 @@ namespace ButikProjekt
 
                     int rowCount = ReceiptWindow.ReceiptDataGridView.Rows.Count;
                     ReceiptWindow.ReceiptDataGridView.Rows[rowCount - 1].Cells[2].Style.ForeColor = Color.Red;
+                    ReceiptWindow.ReceiptDataGridView.Rows[rowCount - 1].Cells[2].Style.ForeColor = Color.Red;
                     ReceiptWindow.ActivateDiscountButton.Enabled = false;
                     ReceiptWindow.DiscountCodeTextBox.Enabled = false;
                 }

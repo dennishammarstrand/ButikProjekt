@@ -109,6 +109,7 @@ namespace ButikProjekt
             DiscountCodeTextBox.Enabled = true;
             DiscountCodeTextBox.Text = "Discount Code";
             DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
+            ActivateDiscountButton.Click -= ActivateDiscountButtonClickHandler;
         }
         public void AddCartToReceipt()
         {
@@ -146,5 +147,6 @@ namespace ButikProjekt
             TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", summary);
 
         }
+
     }
 }
