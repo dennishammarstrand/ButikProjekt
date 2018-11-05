@@ -46,7 +46,6 @@ namespace ButikProjekt
         }
         public static void ProductPanelCreation()
         {
-
             FlowLayoutPanel FlowLayout = new FlowLayoutPanel() { Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true };
 
             foreach (Product item in ListOfProducts)

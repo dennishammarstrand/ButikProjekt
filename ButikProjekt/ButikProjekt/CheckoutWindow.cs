@@ -95,6 +95,7 @@ namespace ButikProjekt
             ActivateDiscountButton.Click += ActivateDiscountButtonClickHandler;
             BuyButton.Click += BuyButton_Click;
         }
+
         private void BuyButton_Click(object sender, EventArgs e)
         {
             if (BuyButton.Text == "Buy")
@@ -112,11 +113,14 @@ namespace ButikProjekt
                 Application.Exit();
             }
         }
+
+        //Adds the discount code and it's discounted value to the datagridview with formatting and 
+        //updates the new total price accordingly.
         public static void AddDiscountCodeToReceipt()
         {
             try
             {
-                string[] discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x[0] == DiscountCodeTextBox.Text);
+                var discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x.Name == DiscountCodeTextBox.Text);
                 if (discountCodeEntered != null)
                 {
                     object[] discountRow = new object[3];
@@ -139,16 +143,19 @@ namespace ButikProjekt
             }
             catch
             {
-                throw new Exception("Discount code not valid!");
+                throw new Exception("Discount code not valid");
             }
+
         }
-        public static double GetValueDiscount(string[] discountCode)
+
+        //Get each discount codes specific discount reduction
+        public static double GetValueDiscount(DiscountCode discountCode)
         {
-            if (discountCode[1] == "Value")
+            if (discountCode.Type == "Value")
             {
-                return int.Parse(discountCode[2]);
+                return discountCode.Value;
             }
-            else if (discountCode[1] == "2for1")
+            else if (discountCode.Type == "2for1")
             {
                 List<Cart> canonOrderedByPrice = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
 
@@ -161,15 +168,16 @@ namespace ButikProjekt
                     throw new Exception("Discount not valid! Add another canon!");
                 }
             }
-            else if (discountCode[1] == "Percent")
+            else if (discountCode.Type == "Percent")
             {
-                return ReceiptSummaryValue * (int.Parse(discountCode[2]) / 100.0);
+                return ReceiptSummaryValue * (discountCode.Value / 100.0);
             }
             else
             {
                 throw new Exception("Discount not valid");
             }
         }
+
         private void ActivateDiscountButtonClickHandler(object sender, EventArgs e)
         {
             try
@@ -210,6 +218,7 @@ namespace ButikProjekt
                 ReceiptDataGridView.Rows.Add(row);
             }
         }
+        //Changes the description text of the Discount textbox when leaving the textbox
         private void DiscountCodeTextBoxLeave(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "")
@@ -218,6 +227,7 @@ namespace ButikProjekt
                 DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             }
         }
+        //Changes the description text of the Discount textbox when entering the textbox 
         private void DiscountCodeTextBoxEnter(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "Discount Code")

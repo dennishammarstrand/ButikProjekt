@@ -34,7 +34,6 @@ namespace ButikProjekt
                     };
 
                     DiscountCodeList.Add(newDiscount);
-                    
                 }
             }
             catch(FileNotFoundException ex)
