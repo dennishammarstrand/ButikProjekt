@@ -60,11 +60,9 @@ namespace ButikProjekt
             Text = "Camera store";
             Icon = new Icon("MainFormIcon.ico");
             Product.AddProductsToList();
-            Product.ProductPanelCreation();
             Cart.GetSavedCartItems();
             DiscountCode.AddDiscountCodesToList();
-            ShoppingCartGridView.Rows.Clear();
-            PrintToCartDataGrid();
+            UpdateCartAndTotalCost();
             //Updates total cost if you have saved products in your cart since last visit
             foreach (Cart item in Cart.CartItems)
             {
@@ -147,10 +145,9 @@ namespace ButikProjekt
         }
         private void CheckoutButtonClick(object sender, EventArgs e)
         {
-            CheckoutWindow receiptWindow = new CheckoutWindow();
-            CheckoutWindow.SetReceiptSummaryValue();
+            CheckoutWindow checkoutWindow = new CheckoutWindow();
 
-            receiptWindow.ShowDialog();
+            checkoutWindow.ShowDialog();
         }
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
@@ -163,18 +160,14 @@ namespace ButikProjekt
                 if (itemToRemove.Amount > 1)
                 {
                     Cart.CartItems[index].Amount--;
-                    ShoppingCartGridView.Rows.Clear();
-                    PrintToCartDataGrid();
                     CartSummaryValue -= Cart.CartItems[index].Product.Price;
-                    PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
+                    UpdateCartAndTotalCost();
                 }
                 else
                 {
                     CartSummaryValue -= Cart.CartItems[index].Product.Price;
                     Cart.CartItems.Remove(itemToRemove);
-                    ShoppingCartGridView.Rows.Clear();
-                    PrintToCartDataGrid();
-                    PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
+                    UpdateCartAndTotalCost();
                 }
             }
             if(Cart.IsCartListEmpty())
@@ -209,9 +202,7 @@ namespace ButikProjekt
             {
                 Cart.CartItems.Add(cartItem);
             }
-            ShoppingCartGridView.Rows.Clear();
-            PrintToCartDataGrid();
-            PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
+            UpdateCartAndTotalCost();
             CheckOutButton.Enabled = true;
         }
         private static void PrintToCartDataGrid()
@@ -224,6 +215,12 @@ namespace ButikProjekt
                 row[2] = item.Amount;
                 ShoppingCartGridView.Rows.Add(row);
             }
+        }
+        private static void UpdateCartAndTotalCost()
+        {
+            ShoppingCartGridView.Rows.Clear();
+            PrintToCartDataGrid();
+            PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
         }
     }
 }

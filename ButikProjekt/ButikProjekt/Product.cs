@@ -38,6 +38,7 @@ namespace ButikProjekt
 
                     ListOfProducts.Add(newProduct);
                 }
+                ProductPanelCreation();
             }
             catch (FileNotFoundException ex)
             {

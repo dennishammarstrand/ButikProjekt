@@ -28,7 +28,7 @@ namespace ButikProjekt
             AllowUserToResizeColumns = false,
             AllowUserToResizeRows = false,
         };
-        public static double ReceiptSummaryValue;
+        public static double CheckoutSummaryValue;
         private static DateTime TodaysDate
         {
             get
@@ -87,7 +87,7 @@ namespace ButikProjekt
             ReceiptDataGridView.Columns[0].Width = 250;
 
             AddCartToReceipt();
-            SetReceiptSummaryValue();
+            SetCheckoutSummaryValue();
 
             FormClosing += ClosingReceipt;
             DiscountCodeTextBox.Enter += DiscountCodeTextBoxEnter;
@@ -95,7 +95,6 @@ namespace ButikProjekt
             ActivateDiscountButton.Click += ActivateDiscountButtonClickHandler;
             BuyButton.Click += BuyButton_Click;
         }
-
         private void BuyButton_Click(object sender, EventArgs e)
         {
             if (BuyButton.Text == "Buy")
@@ -113,9 +112,6 @@ namespace ButikProjekt
                 Application.Exit();
             }
         }
-
-        //Adds the discount code and it's discounted value to the datagridview with formatting and 
-        //updates the new total price accordingly.
         public static void AddDiscountCodeToReceipt()
         {
             try
@@ -129,8 +125,8 @@ namespace ButikProjekt
                     discountRow[0] = DiscountCodeTextBox.Text;
                     discountRow[2] = String.Format(" -{0:C0}", discountValue);
 
-                    ReceiptSummaryValue -= discountValue;
-                    TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", ReceiptSummaryValue);
+                    CheckoutSummaryValue -= discountValue;
+                    TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", CheckoutSummaryValue);
 
                     ReceiptDataGridView.Rows.Add(discountRow);
 
@@ -145,10 +141,7 @@ namespace ButikProjekt
             {
                 throw new Exception("Discount code not valid");
             }
-
         }
-
-        //Get each discount codes specific discount reduction
         public static double GetValueDiscount(DiscountCode discountCode)
         {
             if (discountCode.Type == "Value")
@@ -170,14 +163,13 @@ namespace ButikProjekt
             }
             else if (discountCode.Type == "Percent")
             {
-                return ReceiptSummaryValue * (discountCode.Value / 100.0);
+                return CheckoutSummaryValue * (discountCode.Value / 100.0);
             }
             else
             {
                 throw new Exception("Discount not valid");
             }
         }
-
         private void ActivateDiscountButtonClickHandler(object sender, EventArgs e)
         {
             try
@@ -191,7 +183,7 @@ namespace ButikProjekt
         }
         private void ClosingReceipt(object sender, FormClosingEventArgs e)
         {
-            if (BuyButton.Visible == false)
+            if (BuyButton.Text == "Close")
             {
                 ShopWindow.ClearCart();
                 Application.Exit();
@@ -218,7 +210,6 @@ namespace ButikProjekt
                 ReceiptDataGridView.Rows.Add(row);
             }
         }
-        //Changes the description text of the Discount textbox when leaving the textbox
         private void DiscountCodeTextBoxLeave(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "")
@@ -227,7 +218,6 @@ namespace ButikProjekt
                 DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             }
         }
-        //Changes the description text of the Discount textbox when entering the textbox 
         private void DiscountCodeTextBoxEnter(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "Discount Code")
@@ -236,13 +226,11 @@ namespace ButikProjekt
                 DiscountCodeTextBox.ForeColor = Color.Black;
             }
         }
-        public static void SetReceiptSummaryValue()
+        public static void SetCheckoutSummaryValue()
         {
             var summary = Cart.CartItems.Sum(x => x.Product.Price * x.Amount);
-            ReceiptSummaryValue = summary;
+            CheckoutSummaryValue = summary;
             TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", summary);
-
         }
-
     }
 }
