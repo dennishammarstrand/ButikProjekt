@@ -11,7 +11,6 @@ namespace ButikProjekt
 {
     class ShopWindow : Form
     {
-        //Main form variable declarations
         public static TableLayoutPanel MainLayout = new TableLayoutPanel()
         {
             Dock = DockStyle.Fill,
@@ -110,7 +109,6 @@ namespace ButikProjekt
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
         }
-        //Disable buy button on form load if cart is empty
         private void FormOpenEventHandler(object sender, EventArgs e)
         {
             if (!Cart.IsCartListEmpty())
@@ -118,7 +116,6 @@ namespace ButikProjekt
                 CheckOutButton.Enabled = true;
             }
         }
-        //Saves our cart to a csv file
         private void SaveCartWhenExit(object sender, FormClosingEventArgs e)
         {
             if (!Cart.IsCartListEmpty())
@@ -132,12 +129,10 @@ namespace ButikProjekt
                 }
             }
         }
-        //Clears the cart
         private void ClearCartClick(object sender, EventArgs e)
         {
             ClearCart();
         }
-        //Clears cart a resets the values of everything to default
         public static void ClearCart()
         {
             if (!Cart.IsCartListEmpty() && File.Exists(@"C:\Windows\Temp\SavedCart.csv"))
@@ -150,7 +145,6 @@ namespace ButikProjekt
                 File.Delete(@"C:\Windows\Temp\SavedCart.csv");
             }
         }
-        //
         private void BuyButtonClick(object sender, EventArgs e)
         {
             ReceiptWindow receiptWindow = new ReceiptWindow();
@@ -158,8 +152,6 @@ namespace ButikProjekt
 
             receiptWindow.ShowDialog();
         }
-        //Handles the remove button and checks if the product exists in the cart and at what
-        //index in the cart. Given what item you've clicked in the datagridview.
         private void RemoveFromCartClick(object sender, EventArgs e)
         {
             if (SelectedRow >= 0 && !Cart.IsCartListEmpty() && SelectedRow < Cart.CartItems.Count)
@@ -190,7 +182,6 @@ namespace ButikProjekt
                 CheckOutButton.Enabled = false;
             }
         }
-        //Sets a varible to a index value given what row in the datagridview you've clicked
         private void DataGridCellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -198,8 +189,6 @@ namespace ButikProjekt
                 SelectedRow = e.RowIndex;
             }
         }
-        //Adds a product to cart and checks whether that product allready exist in the 
-        //cart and updates the datagridview and total cost.
         public static void AddToCartClick(object sender, EventArgs e)
         {
             var productToAdd = ((AddButton)sender).Product;
@@ -225,7 +214,6 @@ namespace ButikProjekt
             PriceSummaryTextFormatting = CartPriceSummaryLabel.Text;
             CheckOutButton.Enabled = true;
         }
-        //Populats our datagridview with our list of cart products
         private static void PrintToCartDataGrid()
         {
             foreach (Cart item in Cart.CartItems)

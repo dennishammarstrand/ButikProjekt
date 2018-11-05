@@ -6,7 +6,6 @@ using System.Windows.Forms;
 
 namespace ButikProjekt
 {
-    //Gives our buttons the property of our products
     class AddButton : Button
     {
         public Product Product { get; set; }
@@ -21,7 +20,6 @@ namespace ButikProjekt
 
         private static List<Product> ListOfProducts = new List<Product>();
 
-        //Adds the products from the csv file to the products list
         public static void AddProductsToList()
         {
             try
@@ -50,8 +48,6 @@ namespace ButikProjekt
                 throw new Exception(ex.Message);
             }
         }
-        //Creates a flowlayoutpanel for our whole inventory where every product gets an own
-        //tablelayoutpanel to display all it's properties.
         public static void ProductPanelCreation()
         {
 

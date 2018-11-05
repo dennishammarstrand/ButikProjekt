@@ -95,7 +95,6 @@ namespace ButikProjekt
             ActivateDiscountButton.Click += ActivateDiscountButtonClickHandler;
             BuyButton.Click += BuyButton_Click;
         }
-
         private void BuyButton_Click(object sender, EventArgs e)
         {
             if (BuyButton.Text == "Buy")
@@ -113,38 +112,36 @@ namespace ButikProjekt
                 Application.Exit();
             }
         }
-
-        //Adds the discount code and it's discounted value to the datagridview with formatting and 
-        //updates the new total price accordingly.
         public static void AddDiscountCodeToReceipt()
         {
-            string[] discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x[0] == DiscountCodeTextBox.Text);
-            if (discountCodeEntered != null)
+            try
             {
-                object[] discountRow = new object[3];
-                double discountValue = GetValueDiscount(discountCodeEntered);
+                string[] discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x[0] == DiscountCodeTextBox.Text);
+                if (discountCodeEntered != null)
+                {
+                    object[] discountRow = new object[3];
+                    double discountValue = GetValueDiscount(discountCodeEntered);
 
-                discountRow[0] = DiscountCodeTextBox.Text;
-                discountRow[2] = String.Format(" -{0:C0}", discountValue);
+                    discountRow[0] = DiscountCodeTextBox.Text;
+                    discountRow[2] = String.Format(" -{0:C0}", discountValue);
 
-                ReceiptSummaryValue -= discountValue;
-                TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", ReceiptSummaryValue);
+                    ReceiptSummaryValue -= discountValue;
+                    TotalPriceLabel.Text = String.Format("Total Cost {0:C0}", ReceiptSummaryValue);
 
-                ReceiptDataGridView.Rows.Add(discountRow);
+                    ReceiptDataGridView.Rows.Add(discountRow);
 
-                int rowCount = ReceiptDataGridView.Rows.Count;
-                ReceiptDataGridView.Rows[rowCount - 1].Cells[0].Style.ForeColor = Color.Red;
-                ReceiptDataGridView.Rows[rowCount - 1].Cells[2].Style.ForeColor = Color.Red;
-                ActivateDiscountButton.Enabled = false;
-                DiscountCodeTextBox.Enabled = false;
+                    int rowCount = ReceiptDataGridView.Rows.Count;
+                    ReceiptDataGridView.Rows[rowCount - 1].Cells[0].Style.ForeColor = Color.Red;
+                    ReceiptDataGridView.Rows[rowCount - 1].Cells[2].Style.ForeColor = Color.Red;
+                    ActivateDiscountButton.Enabled = false;
+                    DiscountCodeTextBox.Enabled = false;
+                }
             }
-            else
+            catch
             {
-                throw new Exception("Discount not valid!");
+                throw new Exception("Discount code not valid!");
             }
         }
-
-        //Get each discount codes specific discount reduction
         public static double GetValueDiscount(string[] discountCode)
         {
             if (discountCode[1] == "Value")
@@ -155,7 +152,7 @@ namespace ButikProjekt
             {
                 List<Cart> canonOrderedByPrice = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
 
-                if (canonOrderedByPrice.Count() > 1)
+                if (canonOrderedByPrice.Count() > 1 || canonOrderedByPrice[0].Amount > 1)
                 {
                     return canonOrderedByPrice[0].Product.Price;
                 }
@@ -173,7 +170,6 @@ namespace ButikProjekt
                 throw new Exception("Discount not valid");
             }
         }
-
         private void ActivateDiscountButtonClickHandler(object sender, EventArgs e)
         {
             try
@@ -214,7 +210,6 @@ namespace ButikProjekt
                 ReceiptDataGridView.Rows.Add(row);
             }
         }
-        //Changes the description text of the Discount textbox when leaving the textbox
         private void DiscountCodeTextBoxLeave(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "")
@@ -223,7 +218,6 @@ namespace ButikProjekt
                 DiscountCodeTextBox.ForeColor = SystemColors.InactiveCaption;
             }
         }
-        //Changes the description text of the Discount textbox when entering the textbox 
         private void DiscountCodeTextBoxEnter(object sender, EventArgs e)
         {
             if (DiscountCodeTextBox.Text == "Discount Code")

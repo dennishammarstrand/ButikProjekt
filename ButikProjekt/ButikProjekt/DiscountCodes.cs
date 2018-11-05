@@ -11,7 +11,6 @@ namespace ButikProjekt
     {
         public static List<string[]> DiscountCodeList = new List<string[]>();
         
-        //Adds discount codes from csv to discount code list
         public static void AddDiscountCodesToList()
         {
             try

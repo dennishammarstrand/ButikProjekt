@@ -14,7 +14,6 @@ namespace ButikProjekt
 
         public static List<Cart> CartItems = new List<Cart>();
         
-        //Adds our saved cart products to our cart list 
         public static void GetSavedCartItems()
         {
             string[] fileContent;
@@ -45,7 +44,6 @@ namespace ButikProjekt
                 File.Create(@"C:\Windows\Temp\SavedCart.csv");
             }
         }
-        //Checks whether our cart is empty
         public static bool IsCartListEmpty()
         {
             return Cart.CartItems.Count == 0;
