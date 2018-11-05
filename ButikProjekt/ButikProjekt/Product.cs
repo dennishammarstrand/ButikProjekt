@@ -6,10 +6,6 @@ using System.Windows.Forms;
 
 namespace ButikProjekt
 {
-    class AddButton : Button
-    {
-        public Product Product { get; set; }
-    }
 
     public class Product
     {
