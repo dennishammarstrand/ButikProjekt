@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace ButikProjekt
 {
-    class ReceiptWindow : Form
+    class CheckoutWindow : Form
     {
         private TableLayoutPanel MainLayout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2 };
         public static DataGridView ReceiptDataGridView = new DataGridView
@@ -50,7 +50,7 @@ namespace ButikProjekt
             TextAlign = ContentAlignment.TopLeft,
         };
 
-        public ReceiptWindow()
+        public CheckoutWindow()
         {
             StartPosition = FormStartPosition.CenterScreen;
             MaximizeBox = false;

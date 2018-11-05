@@ -147,8 +147,8 @@ namespace ButikProjekt
         }
         private void CheckoutButtonClick(object sender, EventArgs e)
         {
-            ReceiptWindow receiptWindow = new ReceiptWindow();
-            ReceiptWindow.SetReceiptSummaryValue();
+            CheckoutWindow receiptWindow = new CheckoutWindow();
+            CheckoutWindow.SetReceiptSummaryValue();
 
             receiptWindow.ShowDialog();
         }
