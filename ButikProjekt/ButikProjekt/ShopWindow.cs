@@ -104,7 +104,7 @@ namespace ButikProjekt
 
             ShoppingCartGridView.CellClick += DataGridCellClick;
             RemoveButton.Click += RemoveFromCartClick;
-            CheckOutButton.Click += BuyButtonClick;
+            CheckOutButton.Click += CheckoutButtonClick;
             ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
@@ -145,7 +145,7 @@ namespace ButikProjekt
                 File.Delete(@"C:\Windows\Temp\SavedCart.csv");
             }
         }
-        private void BuyButtonClick(object sender, EventArgs e)
+        private void CheckoutButtonClick(object sender, EventArgs e)
         {
             ReceiptWindow receiptWindow = new ReceiptWindow();
             ReceiptWindow.SetReceiptSummaryValue();

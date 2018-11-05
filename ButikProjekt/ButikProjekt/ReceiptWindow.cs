@@ -120,7 +120,7 @@ namespace ButikProjekt
         {
             try
             {
-                string[] discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x[0] == DiscountCodeTextBox.Text);
+                var discountCodeEntered = DiscountCode.DiscountCodeList.First(x => x.Name == DiscountCodeTextBox.Text);
                 if (discountCodeEntered != null)
                 {
                     object[] discountRow = new object[3];
@@ -149,13 +149,13 @@ namespace ButikProjekt
         }
 
         //Get each discount codes specific discount reduction
-        public static double GetValueDiscount(string[] discountCode)
+        public static double GetValueDiscount(DiscountCode discountCode)
         {
-            if (discountCode[1] == "Value")
+            if (discountCode.Type == "Value")
             {
-                return int.Parse(discountCode[2]);
+                return discountCode.Value;
             }
-            else if (discountCode[1] == "2for1")
+            else if (discountCode.Type == "2for1")
             {
                 List<Cart> canonOrderedByPrice = Cart.CartItems.Where(x => x.Product.Name.Contains("Canon")).OrderBy(z => z.Product.Price).ToList();
 
@@ -168,9 +168,9 @@ namespace ButikProjekt
                     throw new Exception("Discount not valid! Add another canon!");
                 }
             }
-            else if (discountCode[1] == "Percent")
+            else if (discountCode.Type == "Percent")
             {
-                return ReceiptSummaryValue * (int.Parse(discountCode[2]) / 100.0);
+                return ReceiptSummaryValue * (discountCode.Value / 100.0);
             }
             else
             {

@@ -9,7 +9,11 @@ namespace ButikProjekt
 {
     class DiscountCode
     {
-        public static List<string[]> DiscountCodeList = new List<string[]>();
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public int Value { get; set; }
+
+        public static List<DiscountCode> DiscountCodeList = new List<DiscountCode>();
         
         public static void AddDiscountCodesToList()
         {
@@ -21,7 +25,16 @@ namespace ButikProjekt
                 foreach (string s in fileContent)
                 {
                     string[] split = s.Split(';');
-                    DiscountCodeList.Add(split);
+
+                    DiscountCode newDiscount = new DiscountCode
+                    {
+                        Name = split[0],
+                        Type = split[1],
+                        Value = int.Parse(split[2])
+                    };
+
+                    DiscountCodeList.Add(newDiscount);
+                    
                 }
             }
             catch(FileNotFoundException ex)
