@@ -52,7 +52,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Cart.cs" />
-    <Compile Include="DiscountCodes.cs" />
+    <Compile Include="DiscountCode.cs" />
     <Compile Include="ShopWindow.cs">
       <SubType>Form</SubType>
     </Compile>
