@@ -137,9 +137,16 @@ namespace ButikProjekt
                     DiscountCodeTextBox.Enabled = false;
                 }
             }
-            catch
+            catch (Exception ex) 
             {
-                throw new Exception("Discount code not valid");
+                if (ex is InvalidOperationException)
+                {
+                    throw new Exception("Discount code not valid!");
+                }
+                else
+                {
+                    throw new Exception(ex.Message);
+                }
             }
         }
         public static double GetValueDiscount(DiscountCode discountCode)
