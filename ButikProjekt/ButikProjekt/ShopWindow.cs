@@ -35,7 +35,7 @@ namespace ButikProjekt
             SelectionMode = DataGridViewSelectionMode.FullRowSelect
         };
         private Button RemoveButton = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
-        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Checkout", AutoSize = true, Dock = DockStyle.Top };
+        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Checkout", AutoSize = true, Dock = DockStyle.Top, ForeColor = Color.White, BackColor = Color.ForestGreen, FlatStyle = FlatStyle.Flat };
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow { get; set; }
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
@@ -82,15 +82,14 @@ namespace ButikProjekt
 
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
-            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
-            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60));
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40));
             ButtonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
             Controls.Add(MainLayout);
             MainLayout.Controls.Add(ShoppingCartGridView);
-            MainLayout.Controls.Add(CartPriceSummaryLabel, 1, 1);
-            MainLayout.Controls.Add(ButtonLayout, 1, 2);
+            MainLayout.Controls.Add(ButtonLayout);
+            ButtonLayout.Controls.Add(CartPriceSummaryLabel);
             ButtonLayout.Controls.Add(RemoveButton);
             ButtonLayout.Controls.Add(ClearCartButton);
             ButtonLayout.Controls.Add(CheckOutButton);
@@ -133,7 +132,7 @@ namespace ButikProjekt
         }
         public static void ClearCart()
         {
-            if (!Cart.IsCartListEmpty() && File.Exists(@"C:\Windows\Temp\SavedCart.csv"))
+            if (!Cart.IsCartListEmpty())
             {
                 ShoppingCartGridView.Rows.Clear();
                 Cart.CartItems.Clear();

@@ -75,7 +75,7 @@ namespace ButikProjekt
                 productAddButton.Click += ShopWindow.AddToCartClick;
             }
             ShopWindow.MainLayout.Controls.Add(FlowLayout);
-            ShopWindow.MainLayout.SetRowSpan(FlowLayout, 3);
+            ShopWindow.MainLayout.SetRowSpan(FlowLayout, 2);
         }
         public static bool operator ==(Product a, Product b)
         {
