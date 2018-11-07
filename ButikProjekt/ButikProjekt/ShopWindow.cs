@@ -35,7 +35,7 @@ namespace ButikProjekt
             SelectionMode = DataGridViewSelectionMode.FullRowSelect
         };
         private Button RemoveButton = new Button { Font = new Font("San Serif", 15f), Text = "Remove from cart", AutoSize = true, Dock = DockStyle.Top };
-        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Checkout", AutoSize = true, Dock = DockStyle.Top, ForeColor = Color.White, BackColor = Color.ForestGreen, FlatStyle = FlatStyle.Flat };
+        private static Button CheckOutButton = new Button { Enabled = false, Font = new Font("San Serif", 15f), Text = "Checkout", AutoSize = true, Dock = DockStyle.Top };
         private Button ClearCartButton = new Button { Font = new Font("San Serif", 15f), Text = "Clear cart", AutoSize = true, Dock = DockStyle.Top };
         private int SelectedRow { get; set; }
         private TableLayoutPanel ButtonLayout = new TableLayoutPanel { ColumnCount = 1, Dock = DockStyle.Fill, AutoSize = true };
@@ -102,10 +102,28 @@ namespace ButikProjekt
             ShoppingCartGridView.CellClick += DataGridCellClick;
             RemoveButton.Click += RemoveFromCartClick;
             CheckOutButton.Click += CheckoutButtonClick;
+            CheckOutButton.EnabledChanged += CheckOutButton_EnabledChanged;
             ClearCartButton.Click += ClearCartClick;
             FormClosing += SaveCartWhenExit;
             Load += FormOpenEventHandler;
         }
+
+        private void CheckOutButton_EnabledChanged(object sender, EventArgs e)
+        {
+            if (CheckOutButton.Enabled == true)
+            {
+                CheckOutButton.ForeColor = Color.White;
+                CheckOutButton.BackColor = Color.ForestGreen;
+                CheckOutButton.FlatStyle = FlatStyle.Flat;
+            }
+            else if(CheckOutButton.Enabled == false)
+            {
+                CheckOutButton.ForeColor = default(Color);
+                CheckOutButton.BackColor = default(Color);
+                CheckOutButton.FlatStyle = FlatStyle.System;
+            }
+        }
+
         private void FormOpenEventHandler(object sender, EventArgs e)
         {
             if (!Cart.IsCartListEmpty())
