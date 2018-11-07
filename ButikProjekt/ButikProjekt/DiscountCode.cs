@@ -26,14 +26,21 @@ namespace ButikProjekt
                 {
                     string[] split = s.Split(';');
 
-                    DiscountCode newDiscount = new DiscountCode
+                    if (split.Length == 3)
                     {
-                        Name = split[0],
-                        Type = split[1],
-                        Value = int.Parse(split[2])
-                    };
+                        DiscountCode newDiscount = new DiscountCode
+                        {
+                            Name = split[0],
+                            Type = split[1],
+                            Value = int.Parse(split[2])
+                        };
 
-                    DiscountCodeList.Add(newDiscount);
+                        DiscountCodeList.Add(newDiscount);
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
             catch(FileNotFoundException ex)
