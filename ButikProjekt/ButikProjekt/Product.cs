@@ -64,6 +64,9 @@ namespace ButikProjekt
                     Size = new Size(210, 340),
                     BackColor = Color.White
                 };
+                newProductTemplate.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
+                newProductTemplate.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+
                 FlowLayout.Controls.Add(newProductTemplate);
                 PictureBox productImagePictureBox = new PictureBox { ImageLocation = item.Image, Size = new Size(200, 200), SizeMode = PictureBoxSizeMode.Zoom };
                 newProductTemplate.Controls.Add(productImagePictureBox);
